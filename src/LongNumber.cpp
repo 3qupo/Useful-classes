@@ -76,7 +76,7 @@ LongNumber &LongNumber::operator=(const LongNumber &other)
     return *this;
 }
 
-// TODO: second. Сделать операторы (зачем тут выводится размер?)
+// TODO: second. Сделать операторы (how works RemovingLeadingZeros?)
 LongNumber LongNumber::operator+(const LongNumber &other) const 
 {
     size_t shift = 0;
@@ -99,7 +99,6 @@ LongNumber LongNumber::operator+(const LongNumber &other) const
 
     if (shift) result._digits[0] = shift;
     else result.RemovingLeadingZeros();
-    cout << result._size << endl;
 
     // while (result._size > 1 && result._digits[result._size - 1] == '0') {
     //     result._size--;
@@ -400,20 +399,26 @@ LongNumber &LongNumber::RemovingLeadingZeros()
     while (_digits[i] == '0') i++;
 
     if (i == 0) return *this;
+    else if (i == _size)
+    {
+        delete _digits;
+        _size = 1;
+        _digits = new char[_size];
+        _digits[0] = '0';
+        return *this;
+    }
     else 
     {
         char *temp = new char[_size - i];
 
-        for (int j = i; j < _size; j++) {
-            temp[j] = _digits[j];
+        for (int j = 0; j < _size - i; j++) {
+            temp[j] = _digits[j + 1];
         }
 
         delete _digits;
-        _digits = new char[_size];
+        _size = _size - i;
+        _digits = temp;
 
-        for (int j = 0; j < _size; j++) {
-            _digits[j] = temp[j];
-        }
     }
 
     return *this;
