@@ -104,18 +104,13 @@ LongNumber LongNumber::operator+(const LongNumber &other) const
     if (shift) result._digits[0] = shift;
     else result.RemovingLeadingZeros();
 
-    // while (result._size > 1 && result._digits[result._size - 1] == '0') {
-    //     result._size--;
-    // }
-
     return result;
 }
 
 // TODO: second. Сделать операторы (проблема с числами одинаковой длины)
 LongNumber LongNumber::operator-(const LongNumber &other) const
 {
-    if (*this == other)
-        return LongNumber("0");
+    if (*this == other) return LongNumber("0");
 
     LongNumber result;
     int borrow = 0;
@@ -151,7 +146,6 @@ LongNumber LongNumber::operator-(const LongNumber &other) const
         return result.RemovingLeadingZeros();
     }
 
-    // A < B => отрицательный результат
     else
     {
         result._size = other._size + 1;
@@ -174,8 +168,7 @@ LongNumber LongNumber::operator-(const LongNumber &other) const
                 diff += 10;
                 borrow = 1;
             }
-            else
-                borrow = 0;
+            else borrow = 0;
 
             result._digits[k] = diff + '0';
             i--; j--; k--;
@@ -474,31 +467,44 @@ const LongNumber &LongNumber::findMax(const LongNumber &first,
 
 LongNumber &LongNumber::RemovingLeadingZeros() 
 {
-    int i = 0;
-    while (_digits[i] == '0') i++;
+    if(_size == 0 || _digits == nullptr) return *this;
 
-    if (i == 0) return *this;
-    else if (i == _size)
+    int start = 0;                                          // индекс начала значащих цифр
+
+    bool is_negative = false;
+    if(_digits[0] == '-')
     {
-        delete _digits;
+        is_negative = true;
+        start = 1;
+    }
+
+    while(start < _size && _digits[start] == '0') start++;
+
+    if(start == _size)
+    {
+        delete[] _digits;
         _size = 1;
-        _digits = new char[_size];
+        _digits = new char[_size + 1];
         _digits[0] = '0';
+        _digits[1] = '\0';
+
         return *this;
     }
-    else 
-    {
-        char *temp = new char[_size - i];
 
-        for (int j = 0; j < _size - i; j++) {
-            temp[j] = _digits[j + 1];
-        }
+    int newSize = _size - start - (is_negative ? 1 : 0);
+    char* temp = new char[newSize + 1];
 
-        delete[] _digits;
-        _size = _size - i;
-        _digits = temp;
+    int j = 0;
+    if(is_negative) temp[j++] = '-';
 
+    for(int i = start; i < _size; i++) {
+        temp[j++] = _digits[i];
     }
+
+    temp[j] = '\0';
+    delete[] _digits;
+    _digits = temp;
+    _size = newSize;
 
     return *this;
 }

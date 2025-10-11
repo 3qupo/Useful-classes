@@ -7,11 +7,10 @@ using namespace std;
 // TODO: Почему сравнивается только LongNumber с int, но не наоборот
 int main() 
 {
-    LongNumber number1("135829374659283746598237645");
-    LongNumber number2("922345234523452345234523452345");
+    LongNumber number1("135829374659283746598237615");
+    LongNumber number2("-000000004234214");
     LongNumber res;
-    res = number1 - number2;
-    res.print();
+    
 
     return 0;
 }

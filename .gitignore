@@ -1,5 +1,5 @@
-*.o
-*.exe
+/src/*.o
+/src/*.exe
 
 ../.PVS-Studio/
 ../.vscode/
