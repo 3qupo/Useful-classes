@@ -16,7 +16,9 @@ LongNumber::LongNumber()
 LongNumber::LongNumber(size_t size) 
 {
     _size = size;
-    _digits = new char[_size]{0};
+    _digits = new char[_size + 1];
+    for(int i = 0; i < _size; i++) _digits[i] = '0';
+    _digits[_size] = '\0';
 }
 
 LongNumber::LongNumber(const char *array) 
@@ -43,12 +45,12 @@ LongNumber::LongNumber(const char *array)
 LongNumber::LongNumber(const LongNumber &other) 
 {
     _size = other._size;
-    delete[] _digits;
-    _digits = nullptr;
-    _digits = new char[_size];
-
-    for (int i = 0; i < _size; i++) {
-        _digits[i] = other._digits[i];
+    if(_size == 0) _digits = nullptr;
+    else
+    {
+        _digits = new char[_size + 1];
+        for(int i = 0; i < _size; i++) _digits[i] = other._digits[i];
+        _digits[_size] = '\0';
     }
 }
 
@@ -65,18 +67,20 @@ LongNumber &LongNumber::operator=(const LongNumber &other)
 {
     if (this == &other) return *this;
 
-    _size = other._size;
     delete[] _digits;
-    _digits = new char[_size];
 
-    for (int i = 0; i < _size; i++) {
-        _digits[i] = other._digits[i];
+    _size = other._size;
+    if(_size == 0) _digits = nullptr;
+    else
+    {
+        _digits = new char[_size + 1];
+        for(int i = 0; i < _size; i++) _digits[i] = other._digits[i];
+        _digits[_size] = '\0';
     }
 
     return *this;
 }
 
-// TODO: second. Сделать операторы (how works RemovingLeadingZeros?)
 LongNumber LongNumber::operator+(const LongNumber &other) const 
 {
     size_t shift = 0;
@@ -106,6 +110,81 @@ LongNumber LongNumber::operator+(const LongNumber &other) const
 
     return result;
 }
+
+// TODO: second. Сделать операторы (проблема с числами одинаковой длины)
+LongNumber LongNumber::operator-(const LongNumber &other) const
+{
+    if (*this == other)
+        return LongNumber("0");
+
+    LongNumber result;
+    int borrow = 0;
+
+    // A > B
+    if (*this > other)
+    {
+        result._size = _size;
+        result._digits = new char[_size + 1];
+        result._digits[_size] = '\0';
+
+        int i = _size - 1;
+        int j = other._size - 1;
+
+        while (i >= 0)
+        {
+            int a = _digits[i] - '0';
+            int b = (j >= 0) ? (other._digits[j] - '0') : 0;
+            int diff = a - b - borrow;
+
+            if (diff < 0)
+            {
+                diff += 10;
+                borrow = 1;
+            }
+            else
+                borrow = 0;
+
+            result._digits[i] = diff + '0';
+            i--; j--;
+        }
+
+        return result.RemovingLeadingZeros();
+    }
+
+    // A < B => отрицательный результат
+    else
+    {
+        result._size = other._size + 1;
+        result._digits = new char[result._size + 1];
+        result._digits[result._size] = '\0';
+        result._digits[0] = '-';
+
+        int i = _size - 1;
+        int j = other._size - 1;
+        int k = result._size - 1;
+
+        while (j >= 0)
+        {
+            int a = (i >= 0) ? (_digits[i] - '0') : 0;
+            int b = other._digits[j] - '0';
+            int diff = b - a - borrow;
+
+            if (diff < 0)
+            {
+                diff += 10;
+                borrow = 1;
+            }
+            else
+                borrow = 0;
+
+            result._digits[k] = diff + '0';
+            i--; j--; k--;
+        }
+
+        return result.RemovingLeadingZeros();
+    }
+}
+
 
 bool LongNumber::operator==(const LongNumber &other) const 
 {
@@ -415,7 +494,7 @@ LongNumber &LongNumber::RemovingLeadingZeros()
             temp[j] = _digits[j + 1];
         }
 
-        delete _digits;
+        delete[] _digits;
         _size = _size - i;
         _digits = temp;
 
