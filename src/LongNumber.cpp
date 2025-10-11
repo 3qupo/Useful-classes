@@ -107,7 +107,7 @@ LongNumber LongNumber::operator+(const LongNumber &other) const
     return result;
 }
 
-// TODO: second. Сделать операторы (проблема с числами одинаковой длины)
+// TODO: second. Сделать операторы (проблема c отрицательными числами)
 LongNumber LongNumber::operator-(const LongNumber &other) const
 {
     if (*this == other) return LongNumber("0");
@@ -178,6 +178,30 @@ LongNumber LongNumber::operator-(const LongNumber &other) const
     }
 }
 
+// (-a) × b = -(a × b)
+// a × (-b) = -(a × b)
+// (-a) × (-b) = a × b
+LongNumber LongNumber::operator * (const LongNumber &other) const
+{
+    if(_digits[0] == '0' || other._digits[0] == '0') return LongNumber("0");
+
+    int carry = 0;
+
+    if(_digits[0] == '-' && other._digits[0] != '-')
+    {
+        
+    }
+
+    if(_digits[0] != '-' && other._digits[0] == '-')
+    {
+
+    }
+
+    if(_digits[0] == '-' && other._digits[0] == '-')
+    {
+        
+    }
+}
 
 bool LongNumber::operator==(const LongNumber &other) const 
 {
