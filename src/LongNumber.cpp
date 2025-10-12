@@ -181,38 +181,51 @@ LongNumber LongNumber::operator-(const LongNumber &other) const
 // (-a) × b = -(a × b)
 // a × (-b) = -(a × b)
 // (-a) × (-b) = a × b
-LongNumber LongNumber::operator * (const LongNumber &other) const
+LongNumber LongNumber::operator*(const LongNumber &other) const 
 {
-    if(_digits[0] == '0' || other._digits[0] == '0') return LongNumber("0");
+    if (_digits[0] == '0' || other._digits[0] == '0') return LongNumber("0");
 
     bool isNegative = (_digits[0] == '-') ^ (other._digits[0] == '-');
     int start_i = (_digits[0] == '-') ? 1 : 0;
     int start_j = (other._digits[0] == '-') ? 1 : 0;
 
-    int carry = 0;
-    int result_index = 0;
-    int mul = 0;
-    
     size_t new_size = (_size - start_i) + (other._size - start_j) + 1;
     LongNumber result(new_size);
 
-    for(int i = _size - 1; i >= start_i; i--)
+    for (int i = _size - 1; i >= start_i; --i) 
     {
-        carry = 0;
-        for(int j = other._size - 1; j >= start_j; j--)
+        int getThis = _digits[i] - '0';
+        int carry = 0;
+
+        for (int j = other._size - 1; j >= start_j; --j) 
         {
-            result_index = (i - start_i) + (j - start_j);
-            mul = (_digits[i] - '0') * (other._digits[j] - '0') + carry;
-            result._digits[result_index] = (mul % 10) + '0';            // тут надо перезаписать на инты
-            carry = mul / 10;
+            int getOther = other._digits[j] - '0';
+            int pos = (i - start_i) + (j - start_j) + 1;
+
+            int sum = (result._digits[pos] - '0') + getThis * getOther + carry;
+            result._digits[pos] = (sum % 10) + '0';
+            carry = sum / 10;
         }
-        result._digits[(i - start_i)] += carry;             // тут надо перезаписать на инты
+
+        int pos = (i - start_i);
+        result._digits[pos] = ((result._digits[pos] - '0') + carry) + '0';
     }
 
-    if(isNegative) result._digits[0] = '-';
+    result = result.RemovingLeadingZeros();
 
-    return result.RemovingLeadingZeros();
+    if (isNegative && result._digits[0] != '0') 
+    {
+        for (int i = result._size; i > 0; --i) {
+            result._digits[i] = result._digits[i - 1];
+        }
+
+        result._digits[0] = '-';
+    }
+
+    return result;
 }
+
+
 
 // LongNumber LongNumber::operator / (const LongNumber& other)
 // {
