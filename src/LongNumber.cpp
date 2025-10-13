@@ -226,13 +226,14 @@ LongNumber LongNumber::operator*(const LongNumber &other) const
 }
 
 
+LongNumber LongNumber::operator / (const LongNumber& other) const
+{
+    LongNumber result;
+    
+    return result;
+}
 
-// LongNumber LongNumber::operator / (const LongNumber& other)
-// {
-
-// }
-
-// LongNumber LongNumber::operator % (const LongNumber& other)
+// LongNumber LongNumber::operator % (const LongNumber& other) const
 // {
 
 // }
