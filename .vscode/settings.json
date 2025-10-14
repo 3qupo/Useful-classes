@@ -47,5 +47,15 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
+    },
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.obj": true,
+        "**/*.exe": true,
+        "**/a.out": true,
+        "**/main": true,
+        "**/program": true,
+        "**/test": true,
+        "**/app": true
     }
 }

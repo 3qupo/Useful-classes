@@ -1,7 +1,9 @@
 #include "../include/LongNumber.h"
 #include "../include/Matrix.h"
+#include "../include/Generator.h"
 
 using namespace std;
+using namespace Generator;
 
 int main()
 {
@@ -12,7 +14,7 @@ int main()
     // res.print();
 
 
-    Matrix A(5, 5);
+    Matrix A = generateMatrix(5, 5);
     A.print();
     // size_t result = A.size();
     // cout << result << endl;

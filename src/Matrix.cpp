@@ -59,6 +59,30 @@ Matrix& Matrix::operator = (const Matrix& other)
     return *this;
 }
 
+Matrix Matrix::operator + (const Matrix& other) const
+{
+
+    return *this;
+}
+
+Matrix Matrix::operator - (const Matrix& other) const
+{
+
+    return *this;
+}
+
+Matrix Matrix::operator * (const Matrix& other) const
+{
+
+    return *this;
+}
+
+Matrix Matrix::operator * (const int other) const
+{
+
+    return *this;
+}
+
 void Matrix::allocateMemory()
 {
     if(_rows > 0 && _columns > 0)
