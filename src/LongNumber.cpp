@@ -63,7 +63,7 @@ LongNumber::~LongNumber()
 }
 
 // оператор присваивания
-LongNumber &LongNumber::operator=(const LongNumber &other) 
+LongNumber &LongNumber::operator = (const LongNumber &other) 
 {
     if (this == &other) return *this;
 
@@ -87,7 +87,7 @@ char& LongNumber::operator [] (const size_t index)
     return _digits[index];
 }
 
-LongNumber LongNumber::operator+(const LongNumber &other) const 
+LongNumber LongNumber::operator + (const LongNumber &other) const 
 {
     size_t shift = 0;
     size_t result_size = max(_size, other._size) + 1;
@@ -114,7 +114,7 @@ LongNumber LongNumber::operator+(const LongNumber &other) const
 }
 
 // TODO: second. Сделать операторы (проблема c отрицательными числами)
-LongNumber LongNumber::operator-(const LongNumber &other) const
+LongNumber LongNumber::operator - (const LongNumber &other) const
 {
     if (*this == other) return LongNumber("0");
 
@@ -187,7 +187,7 @@ LongNumber LongNumber::operator-(const LongNumber &other) const
 // (-a) × b = -(a × b)
 // a × (-b) = -(a × b)
 // (-a) × (-b) = a × b
-LongNumber LongNumber::operator*(const LongNumber &other) const 
+LongNumber LongNumber::operator * (const LongNumber &other) const 
 {
     if (_digits[0] == '0' || other._digits[0] == '0') return LongNumber("0");
 
@@ -239,12 +239,14 @@ LongNumber LongNumber::operator / (const LongNumber& other) const
     return result;
 }
 
-// LongNumber LongNumber::operator % (const LongNumber& other) const
-// {
+LongNumber LongNumber::operator % (const LongNumber& other) const
+{
+    LongNumber result;
 
-// }
+    return result;
+}
 
-bool LongNumber::operator==(const LongNumber &other) const 
+bool LongNumber::operator == (const LongNumber &other) const 
 {
     if (_size != other._size)
         return false;
@@ -257,7 +259,7 @@ bool LongNumber::operator==(const LongNumber &other) const
     return true;
 }
 
-bool LongNumber::operator!=(const LongNumber &other) const 
+bool LongNumber::operator != (const LongNumber &other) const 
 {
     if (_size != other._size) return true;
 
@@ -270,7 +272,7 @@ bool LongNumber::operator!=(const LongNumber &other) const
     return false;
 }
 
-bool LongNumber::operator>(const LongNumber &other) const 
+bool LongNumber::operator > (const LongNumber &other) const 
 {
     // if(_size > other._size) return true;
     // if(_size < other._size) return false;
@@ -285,7 +287,7 @@ bool LongNumber::operator>(const LongNumber &other) const
     return false;
 }
 
-bool LongNumber::operator>=(const LongNumber &other) const 
+bool LongNumber::operator >= (const LongNumber &other) const 
 {
     // if(_size > other._size) return true;
     // if(_size < other._size) return false;
@@ -300,7 +302,7 @@ bool LongNumber::operator>=(const LongNumber &other) const
     return true;
 }
 
-bool LongNumber::operator<(const LongNumber &other) const 
+bool LongNumber::operator < (const LongNumber &other) const 
 {
     if (_size != other._size) return _size < other._size;
 
@@ -313,7 +315,7 @@ bool LongNumber::operator<(const LongNumber &other) const
     return false;
 }
 
-bool LongNumber::operator<=(const LongNumber &other) const 
+bool LongNumber::operator <= (const LongNumber &other) const 
 {
     if (_size != other._size) return _size < other._size;
 
@@ -326,8 +328,7 @@ bool LongNumber::operator<=(const LongNumber &other) const
     return true;
 }
 
-// TODO: first. Сделать все возможные операторы
-bool LongNumber::operator==(const int &other) const 
+bool LongNumber::operator == (const int &other) const 
 {
     if (_size != lenght(other)) return false;
 
@@ -343,7 +344,7 @@ bool LongNumber::operator==(const int &other) const
     return true;
 }
 
-bool LongNumber::operator!=(const int &other) const 
+bool LongNumber::operator != (const int &other) const 
 {
     if (_size != lenght(other)) return true;
 
@@ -360,7 +361,7 @@ bool LongNumber::operator!=(const int &other) const
     return false;
 }
 
-bool LongNumber::operator<(const int &other) const 
+bool LongNumber::operator < (const int &other) const 
 {
     int lenght_int = lenght(other);
     if (_size < lenght_int) return true;
@@ -387,7 +388,7 @@ bool LongNumber::operator<(const int &other) const
     return false;
 }
 
-bool LongNumber::operator<=(const int &other) const 
+bool LongNumber::operator <= (const int &other) const 
 {
     int lenght_int = lenght(other);
     if (_size < lenght_int) return true;
@@ -414,7 +415,7 @@ bool LongNumber::operator<=(const int &other) const
     return true;
 }
 
-bool LongNumber::operator>(const int &other) const 
+bool LongNumber::operator > (const int &other) const 
 {
     int lenght_int = lenght(other);
 
@@ -440,7 +441,7 @@ bool LongNumber::operator>(const int &other) const
     return false;
 }
 
-bool LongNumber::operator>=(const int &other) const 
+bool LongNumber::operator >= (const int &other) const 
 {
     int lenght_int = lenght(other);
 
