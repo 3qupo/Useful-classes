@@ -99,8 +99,24 @@ size_t Matrix::size() const {
 
 void Matrix::setValue(size_t rows, size_t columns, int value)
 {
-    if(rows > _rows || columns > _columns) throw out_of_range("Matrix index out of range\n");
+    if(rows >= _rows || columns >= _columns) throw out_of_range("Matrix index out of range\n");
     _data[rows][columns] = value;
+}
+
+int Matrix::getValue(size_t rows, size_t columns) const
+{
+    if(rows >= _rows || columns >= _columns) throw out_of_range("Matrix index out of range\n");
+    return _data[rows][columns];
+}
+
+size_t Matrix::getRows() const
+{
+    return _rows;
+}
+
+size_t Matrix::getColumns() const
+{
+    return _columns;
 }
 
 void Matrix::print() const
