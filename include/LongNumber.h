@@ -48,6 +48,5 @@ public:
     const LongNumber resize(const size_t& size) const;
     int lenght(int number) const;
     const LongNumber& findMax(const LongNumber& first, const LongNumber& second);
-    void print();
-    
+    void print(); 
 };

@@ -38,6 +38,14 @@ Matrix::~Matrix()
     deallocateMemory();
 }
 
+// Matrix& Matrix::operator = (const Matrix& other)
+// {
+//     if(_data != nullptr)
+//     {
+//         for(int i = 0; i < )
+//     }
+// }
+
 void Matrix::allocateMemory()
 {
     if(_rows > 0 && _columns > 0)
@@ -62,4 +70,17 @@ void Matrix::deallocateMemory()
     }
     _rows = 0;
     _columns = 0;
+}
+
+// need to check
+size_t Matrix::size() const
+{
+    size_t size = 0;
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++)
+        {
+            ++size;
+        }
+    }
 }
