@@ -5,13 +5,23 @@ using namespace std;
 
 int main()
 {
-    LongNumber n1("332452345236236232");
-    LongNumber n2("-221532453245234598236598723649587632453");
-    LongNumber res;
-    res = n1 * n2;
-    res.print();
+    // LongNumber n1("332452345236236232");
+    // LongNumber n2("-221532453245234598236598723649587632453");
+    // LongNumber res;
+    // res = n1 * n2;
+    // res.print();
 
 
     Matrix A(5, 5);
+    for(size_t i = 0; i < 5; i++)
+    {
+        for(size_t j = 0; j < 5; j++)
+        {
+            A.setValue(i, j, 5);
+        }
+    }
+    A.print();
+    // size_t result = A.size();
+    // cout << result << endl;
     return 0;
 }

@@ -25,7 +25,7 @@ public:
     size_t getRows() const;
     size_t getColumns() const;
     int getValue(size_t rows, size_t columns) const;
-    void setValue(size_t rows, size_t columns, int value) const;
+    void setValue(size_t rows, size_t columns, int value);
     void print() const;
     void allocateMemory();
     void deallocateMemory();

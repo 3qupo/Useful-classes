@@ -38,13 +38,26 @@ Matrix::~Matrix()
     deallocateMemory();
 }
 
-// Matrix& Matrix::operator = (const Matrix& other)
-// {
-//     if(_data != nullptr)
-//     {
-//         for(int i = 0; i < )
-//     }
-// }
+Matrix& Matrix::operator = (const Matrix& other)
+{
+    if(this == &other) return *this;
+
+    deallocateMemory();
+    _rows = other._rows;
+    _columns = other._columns;
+
+    allocateMemory();
+
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++)
+        {
+            _data[i][j] = other._data[i][j];
+        }
+    }
+
+    return *this;
+}
 
 void Matrix::allocateMemory()
 {
@@ -53,6 +66,14 @@ void Matrix::allocateMemory()
         _data = new int*[_rows];
         for(size_t i = 0; i < _rows; i++) {
             _data[i] = new int[_columns];
+        }
+
+        for(size_t i = 0; i < _rows; i++)
+        {
+            for(size_t j = 0; j < _columns; j++)
+            {
+                _data[i][j] = 0;
+            }
         }
     }
     else _data = nullptr;
@@ -72,15 +93,25 @@ void Matrix::deallocateMemory()
     _columns = 0;
 }
 
-// need to check
-size_t Matrix::size() const
+size_t Matrix::size() const {
+    return _rows * _columns;
+}
+
+void Matrix::setValue(size_t rows, size_t columns, int value)
 {
-    size_t size = 0;
+    if(rows > _rows || columns > _columns) throw out_of_range("Matrix index out of range\n");
+    _data[rows][columns] = value;
+}
+
+void Matrix::print() const
+{
     for(size_t i = 0; i < _rows; i++)
     {
         for(size_t j = 0; j < _columns; j++)
         {
-            ++size;
+            cout << _data[i][j] << '\t';
         }
+        cout << "\n";
     }
+    return;
 }
