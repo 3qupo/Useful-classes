@@ -22,7 +22,13 @@ Matrix Generator::generateMatrix(const size_t rows, const size_t columns)
     return result;
 }
 
-// LongNumber Generator::generateLongNumber(const size_t len)
-// {
+LongNumber Generator::generateLongNumber(const size_t len)
+{
+    LongNumber result(len);
+    srand(time(0));
+    for(size_t i = 0; i < len; i++) {
+        result[i] = rand() % 10;     // и первая цифра не должна быть 0
+    }
 
-// }
+    return result;
+}

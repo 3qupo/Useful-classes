@@ -13,7 +13,7 @@ LongNumber::LongNumber()
 }
 
 // параметризованный конструктор
-LongNumber::LongNumber(size_t size) 
+LongNumber::LongNumber(const size_t size) 
 {
     _size = size;
     _digits = new char[_size + 1];
@@ -79,6 +79,12 @@ LongNumber &LongNumber::operator=(const LongNumber &other)
     }
 
     return *this;
+}
+
+char& LongNumber::operator [] (const size_t index) 
+{   
+    if (index >= _size) throw out_of_range("Index out of range\n");
+    return _digits[index];
 }
 
 LongNumber LongNumber::operator+(const LongNumber &other) const 

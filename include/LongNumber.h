@@ -12,12 +12,13 @@ private:
     size_t _size;
 public:
     LongNumber();
-    LongNumber(size_t size);
+    LongNumber(const size_t size);
     LongNumber(const char* array);
     LongNumber(const LongNumber& other);
     ~LongNumber();
 
     LongNumber& operator = (const LongNumber& other);
+    char& operator [] (const size_t index);
     LongNumber operator + (const LongNumber& other) const;
     LongNumber operator - (const LongNumber& other) const;
     LongNumber operator * (const LongNumber& other) const;
