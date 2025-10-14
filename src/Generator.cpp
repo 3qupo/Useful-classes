@@ -1,5 +1,5 @@
 #include "../include/Generator.h"
-#include "../include/Matrix.h"
+
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -26,8 +26,10 @@ LongNumber Generator::generateLongNumber(const size_t len)
 {
     LongNumber result(len);
     srand(time(0));
-    for(size_t i = 0; i < len; i++) {
-        result[i] = rand() % 10;     // и первая цифра не должна быть 0
+    result[0] = (rand() % 9) + '1';
+    
+    for(size_t i = 1; i < len; i++) {
+        result[i] = (rand() % 10) + '0';    
     }
 
     return result;

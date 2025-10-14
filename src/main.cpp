@@ -13,9 +13,11 @@ int main()
     // res = n1 * n2;
     // res.print();
 
+    LongNumber num1 = generateLongNumber(3223);
+    num1.print();
 
-    Matrix A = generateMatrix(5, 5);
-    A.print();
+    // Matrix A = generateMatrix(5, 5);
+    // A.print();
     // size_t result = A.size();
     // cout << result << endl;
     return 0;
