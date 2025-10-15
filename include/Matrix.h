@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include "../include/LongNumber.h"
 
 class Matrix
 {
@@ -12,6 +13,7 @@ private:
 public:
     Matrix();
     Matrix(size_t rows, size_t columns);
+    Matrix(LongNumber rows, LongNumber columns);
     Matrix(const Matrix& other);
     ~Matrix();
 
@@ -19,8 +21,12 @@ public:
     Matrix operator + (const Matrix& other) const;
     Matrix operator - (const Matrix& other) const;
     Matrix operator * (const Matrix& other) const;
-    Matrix operator * (const int other) const;
+    Matrix operator * (int other) const;
+    Matrix operator * (LongNumber other) const;
 
+    Matrix transposition();
+    Matrix inverseMatrix();
+    int determinant();
     size_t size() const;                    // Получение общего количества элементов
     size_t getRows() const;
     size_t getColumns() const;

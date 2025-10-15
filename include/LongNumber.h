@@ -10,6 +10,7 @@ class LongNumber
 private:
     char* _digits;
     size_t _size;
+    
 public:
     LongNumber();
     LongNumber(const size_t size);

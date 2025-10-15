@@ -103,7 +103,7 @@ Matrix Matrix::operator - (const Matrix& other) const
 //     return *this;
 // }
 
-Matrix Matrix::operator * (const int other) const
+Matrix Matrix::operator * (int other) const
 {
     Matrix result(_rows, _columns);
 
@@ -114,6 +114,34 @@ Matrix Matrix::operator * (const int other) const
         }
     }
     return result;
+}
+
+// Matrix Matrix::operator * (LongNumber other) const
+// {
+//     Matrix result(_rows, _columns);
+
+//     for(size_t i = 0; i < _rows; i++)
+//     {
+//         for(size_t j = 0; j < _columns; j++) {
+//             result.setValue(i, j, number * other);
+//         }
+//     }
+//     return *this;
+// }
+
+Matrix Matrix::transposition()
+{
+    return *this;
+}
+
+Matrix Matrix::inverseMatrix()
+{
+    return *this;
+}
+
+int Matrix::determinant()
+{
+    return 0;
 }
 
 void Matrix::allocateMemory()
