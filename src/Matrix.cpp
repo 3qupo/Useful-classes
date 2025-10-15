@@ -61,26 +61,59 @@ Matrix& Matrix::operator = (const Matrix& other)
 
 Matrix Matrix::operator + (const Matrix& other) const
 {
+    if(_rows != other._rows || _columns != other._columns) throw invalid_argument("Matrix dimensions must match for addition\n");
 
-    return *this;
+    Matrix result(_rows, _columns);
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++) {
+            result.setValue(i, j, getValue(i, j) + other.getValue(i, j));   // инкапсуляция
+        }
+    }
+    return result;
 }
 
 Matrix Matrix::operator - (const Matrix& other) const
 {
+    if(_rows != other._rows || _columns != other._columns) throw invalid_argument("Matrix dimensions must match for subtraction\n");
 
-    return *this;
+    Matrix result(_rows, _columns);
+
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++) {
+            result.setValue(i, j, getValue(i, j) - other.getValue(i, j));
+        }
+    }
+    return result;
 }
 
-Matrix Matrix::operator * (const Matrix& other) const
-{
+// Matrix Matrix::operator * (const Matrix& other) const
+// {
+//     if(_rows != other._columns) throw invalid_argument("The row length must be equal to the column length\n");
 
-    return *this;
-}
+//     Matrix result(_rows, other._columns);
+
+//     for(size_t i = 0; i < _rows; i++)
+//     {
+//         for(size_t j = 0; j < _columns; j++) {
+//             result.setValue()
+//         }
+//     }
+//     return *this;
+// }
 
 Matrix Matrix::operator * (const int other) const
 {
+    Matrix result(_rows, _columns);
 
-    return *this;
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++) {
+            result.setValue(i, j, getValue(i, j) * other);
+        }
+    }
+    return result;
 }
 
 void Matrix::allocateMemory()

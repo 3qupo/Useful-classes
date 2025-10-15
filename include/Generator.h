@@ -2,6 +2,8 @@
 
 #include "../include/LongNumber.h"
 #include "../include/Matrix.h"
+#include "../include/Graph.h"
+#include "../include/BinarySearchTree.h"
 
 namespace Generator
 {
