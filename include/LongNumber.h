@@ -9,7 +9,8 @@ class LongNumber
 {
 private:
     char* _digits;
-    size_t _size;
+    size_t _size;       // size of _digits without _isNegative
+    bool _isNegative;
     
 public:
     LongNumber();
@@ -47,6 +48,7 @@ public:
     bool operator <= (const int& other) const;
 
     size_t getSize() const;
+    bool getIsNegative() const;
     LongNumber& RemovingLeadingZeros();
     const LongNumber resize(const size_t& size) const;
     int length(int number) const;

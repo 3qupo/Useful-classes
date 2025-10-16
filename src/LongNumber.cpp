@@ -10,6 +10,7 @@ LongNumber::LongNumber()
 {
     _digits = nullptr;
     _size = 0;
+    _isNegative = false;
 }
 
 // параметризованный конструктор
@@ -19,37 +20,58 @@ LongNumber::LongNumber(const size_t size)
     _digits = new char[_size + 1];
     for(int i = 0; i < _size; i++) _digits[i] = '0';
     _digits[_size] = '\0';
+    _isNegative = false;
 }
 
 LongNumber::LongNumber(const char *array) 
 {
-    _size = 0;
-    _digits = nullptr;
-    size_t i = 0;
-
-    while (array[i] != '\0') 
+    if(array == nullptr || array[0] == '\0')
     {
-        _size++;
-        i++;
+        _size = 1;
+        _digits = new char[2];
+        _digits[0] = '0';
+        _digits[1] = '\0';
+        _isNegative = false;
+        return;
     }
 
-    delete[] _digits;
-    _digits = new char[_size];
-
-    for (i = 0; i < _size; i++) {
-        _digits[i] = array[i];
+    size_t length = 0;
+    while (array[length] != '\0') {
+        length++;
     }
+    
+    size_t startIndex = 0;
+    if(array[0] == '-')
+    {
+        _isNegative = true;
+        startIndex = 1;
+        _size = length - 1;
+    }
+    else
+    {
+        _isNegative = false;
+        _size = length;
+    }
+
+    _digits = new char[_size + 1];
+
+    for(size_t i = 0; i < _size; i++) {
+        _digits[i] = array[startIndex + i];
+    }
+
+    _digits[_size] = '\0';
 }
 
 // конструктор копирования
 LongNumber::LongNumber(const LongNumber &other) 
 {
     _size = other._size;
+    _isNegative = other._isNegative;
     if(_size == 0) _digits = nullptr;
     else
     {
         _digits = new char[_size + 1];
-        for(int i = 0; i < _size; i++) _digits[i] = other._digits[i];
+        for(size_t i = 0; i < _size; i++) _digits[i] = other._digits[i];
         _digits[_size] = '\0';
     }
 }
@@ -60,6 +82,7 @@ LongNumber::~LongNumber()
     delete[] _digits;
     _digits = nullptr;
     _size = 0;
+    _isNegative = false;
 }
 
 // оператор присваивания
@@ -246,35 +269,45 @@ LongNumber LongNumber::operator % (const LongNumber& other) const
     return result;
 }
 
-LongNumber LongNumber::operator + (const int& other) const
-{
-    size_t shift = 0;
-    size_t sum = 0;
-    int copy_other = other;
-    size_t result_size = max(static_cast<int>(getSize()), length(other)) + 1;
-    LongNumber result(result_size);
-    size_t j = getSize() - 1;
-    size_t k = length(other) - 1;
+// LongNumber LongNumber::operator + (const int& other) const
+// {
+//     if(other == 0) return *this;
+//     if(_size == 0) return LongNumber(other);
 
-    for(size_t i = result.getSize() - 1; i > 0; i--)
-    {
-        sum = shift;
+//     bool this_negative
+//     size_t shift = 0;
+//     size_t sum = 0;
+//     int copy_other = other;
+//     size_t result_size = max(static_cast<int>(getSize()), length(other)) + 1;
+//     LongNumber result(result_size);
+//     size_t j = getSize() - 1;
+//     size_t k = length(other) - 1;
+//     size_t index_this = getSize() - 1;
 
-        sum += _digits[i] - '0';
-        copy_other > 0 ? (sum += copy_other % 10) : sum += 0;
+//     for(size_t i = result_size - 1; i > 0; i--)
+//     {
+//         sum = shift;
 
-        result._digits[i] = (sum % 10) + '0';
-        shift = sum / 10;
+//         if(index_this < getSize())
+//         {
+//             sum += _digits[index_this] - '0';
+//             if(index_this > 0) index_this--;
+//         }
+//         sum += _digits[i] - '0';
+//         copy_other > 0 ? (sum += copy_other % 10) : sum += 0;
 
-        j--; 
-        if(copy_other > 0) copy_other /= 10;
-    }
+//         result._digits[i] = (sum % 10) + '0';
+//         shift = sum / 10;
 
-    if(shift) result._digits[0] = shift + '0';
-    else result.RemovingLeadingZeros();
+//         j--; 
+//         if(copy_other > 0) copy_other /= 10;
+//     }
 
-    return result;
-}
+//     if(shift) result._digits[0] = shift + '0';
+//     else result.RemovingLeadingZeros();
+
+//     return result;
+// }
 
 bool LongNumber::operator == (const LongNumber &other) const 
 {
@@ -516,6 +549,10 @@ int LongNumber::length(int number) const
 
 size_t LongNumber::getSize() const {
     return _size;
+}
+
+bool LongNumber::getIsNegative() const {
+    return _isNegative;
 }
 
 void LongNumber::print() 
