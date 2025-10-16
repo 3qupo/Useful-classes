@@ -46,9 +46,10 @@ public:
     bool operator < (const int& other) const;
     bool operator <= (const int& other) const;
 
+    size_t getSize() const;
     LongNumber& RemovingLeadingZeros();
     const LongNumber resize(const size_t& size) const;
-    int lenght(int number) const;
+    int length(int number) const;
     const LongNumber& findMax(const LongNumber& first, const LongNumber& second);
     void print(); 
 };

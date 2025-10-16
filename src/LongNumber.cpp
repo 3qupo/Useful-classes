@@ -102,9 +102,9 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         if (k >= 0) sum += other._digits[k] - '0';
 
         result._digits[i] = (sum % 10) + '0';
-        shift = (sum / 10);
-        j--;
-        k--;
+        shift = sum / 10;
+
+        j--; k--;
     }
 
     if (shift) result._digits[0] = shift;
@@ -246,6 +246,36 @@ LongNumber LongNumber::operator % (const LongNumber& other) const
     return result;
 }
 
+LongNumber LongNumber::operator + (const int& other) const
+{
+    size_t shift = 0;
+    size_t sum = 0;
+    int copy_other = other;
+    size_t result_size = max(static_cast<int>(getSize()), length(other)) + 1;
+    LongNumber result(result_size);
+    size_t j = getSize() - 1;
+    size_t k = length(other) - 1;
+
+    for(size_t i = result.getSize() - 1; i > 0; i--)
+    {
+        sum = shift;
+
+        sum += _digits[i] - '0';
+        copy_other > 0 ? (sum += copy_other % 10) : sum += 0;
+
+        result._digits[i] = (sum % 10) + '0';
+        shift = sum / 10;
+
+        j--; 
+        if(copy_other > 0) copy_other /= 10;
+    }
+
+    if(shift) result._digits[0] = shift + '0';
+    else result.RemovingLeadingZeros();
+
+    return result;
+}
+
 bool LongNumber::operator == (const LongNumber &other) const 
 {
     if (_size != other._size)
@@ -330,7 +360,7 @@ bool LongNumber::operator <= (const LongNumber &other) const
 
 bool LongNumber::operator == (const int &other) const 
 {
-    if (_size != lenght(other)) return false;
+    if (_size != length(other)) return false;
 
     int copy = other;
 
@@ -346,7 +376,7 @@ bool LongNumber::operator == (const int &other) const
 
 bool LongNumber::operator != (const int &other) const 
 {
-    if (_size != lenght(other)) return true;
+    if (_size != length(other)) return true;
 
     int copy = other;
     int digit_int = 0;
@@ -363,7 +393,7 @@ bool LongNumber::operator != (const int &other) const
 
 bool LongNumber::operator < (const int &other) const 
 {
-    int lenght_int = lenght(other);
+    int lenght_int = length(other);
     if (_size < lenght_int) return true;
     else if (_size > lenght_int) return false;
 
@@ -390,7 +420,7 @@ bool LongNumber::operator < (const int &other) const
 
 bool LongNumber::operator <= (const int &other) const 
 {
-    int lenght_int = lenght(other);
+    int lenght_int = length(other);
     if (_size < lenght_int) return true;
     else if (_size > lenght_int) return false;
 
@@ -417,7 +447,7 @@ bool LongNumber::operator <= (const int &other) const
 
 bool LongNumber::operator > (const int &other) const 
 {
-    int lenght_int = lenght(other);
+    int lenght_int = length(other);
 
     if (_size > lenght_int) return true;
     else if (_size < lenght_int) return false;
@@ -443,7 +473,7 @@ bool LongNumber::operator > (const int &other) const
 
 bool LongNumber::operator >= (const int &other) const 
 {
-    int lenght_int = lenght(other);
+    int lenght_int = length(other);
 
     if (_size > lenght_int)
         return true;
@@ -469,20 +499,23 @@ bool LongNumber::operator >= (const int &other) const
     return true;
 }
 
-int LongNumber::lenght(int number) const 
+int LongNumber::length(int number) const 
 {
     if (number == 0) return 1;
 
-    int result = 0;
-    number = abs(number);
-
-    while (number != 0) 
+    size_t len = 0;
+    int temp = abs(number);
+    while (temp != 0) 
     {
         number /= 10;
-        result++;
+        len++;
     }
 
-    return result;
+    return len;
+}
+
+size_t LongNumber::getSize() const {
+    return _size;
 }
 
 void LongNumber::print() 
