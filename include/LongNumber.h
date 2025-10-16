@@ -8,7 +8,7 @@ using namespace std;
 class LongNumber
 {
 private:
-    char* _digits;
+    char* _digits;      // without _isNegative
     size_t _size;       // size of _digits without _isNegative
     bool _isNegative;
     
@@ -49,9 +49,13 @@ public:
 
     size_t getSize() const;
     bool getIsNegative() const;
+    LongNumber addAbsolute(const LongNumber& other) const;
+    LongNumber substractAbsolute(const LongNumber& other) const;
     LongNumber& RemovingLeadingZeros();
-    const LongNumber resize(const size_t& size) const;
     int length(int number) const;
-    const LongNumber& findMax(const LongNumber& first, const LongNumber& second);
     void print(); 
+
+    // trash 
+    const LongNumber resize(const size_t& size) const;
+    const LongNumber& findMax(const LongNumber& first, const LongNumber& second);
 };
