@@ -12,7 +12,7 @@ using namespace std;
 
 // ------------------------ LongNumber ------------------------
 
-void testsLongNumber::testAssignmentOperator() 
+void testsLongNumber::testAssignmentOperatorLongNumber() 
 {
     cout << "Testing assignment operator..." << endl;
     
@@ -42,7 +42,7 @@ void testsLongNumber::testAssignmentOperator()
     cout << "Assignment operator tests passed!" << endl;
 }
 
-void testsLongNumber::testIndexOperator() 
+void testsLongNumber::testIndexOperatorLongNumber() 
 {
     cout << "Testing index operator..." << endl;
     
@@ -99,7 +99,7 @@ void testsLongNumber::testArithmeticOperatorsWithLongNumber()
     cout << "Arithmetic operators with LongNumber tests passed!" << endl;
 }
 
-void testsLongNumber::testArithmeticOperatorsWithInt() 
+void testsLongNumber::testArithmeticOperatorsLongNumberWithInt() 
 {
     cout << "Testing arithmetic operators with int..." << endl;
     
@@ -168,7 +168,7 @@ void testsLongNumber::testComparisonOperatorsWithLongNumber()
     cout << "Comparison operators with LongNumber tests passed!" << endl;
 }
 
-void testsLongNumber::testComparisonOperatorsWithInt() 
+void testsLongNumber::testComparisonOperatorsLongNumberWithInt() 
 {
     cout << "Testing comparison operators with int..." << endl;
     
@@ -206,7 +206,7 @@ void testsLongNumber::testComparisonOperatorsWithInt()
     cout << "Comparison operators with int tests passed!" << endl;
 }
 
-void testsLongNumber::testEdgeCases() 
+void testsLongNumber::testEdgeCasesLongNumber() 
 {
     cout << "Testing edge cases..." << endl;
     
@@ -237,7 +237,7 @@ void testsLongNumber::testEdgeCases()
     cout << "Edge cases tests passed!" << endl;
 }
 
-void testsLongNumber::testMixedOperations() 
+void testsLongNumber::testMixedOperationsLongNumber() 
 {
     cout << "Testing mixed operations..." << endl;
     
@@ -262,25 +262,211 @@ void testsLongNumber::testMixedOperations()
 
 void testMatrix::testCreateMatrix()
 {
-    return;   
+    cout << "Тестирование создания матриц началось..." << endl;
+
+    Matrix l;
+    assert(l.getColumns() == 0);
+    assert(l.getRows() == 0);
+    assert(l.size() == 0);
+    Matrix m(5, 5);
+    assert(m.getRows() == 5);
+    assert(m.getColumns() == 5);
+    assert(m.getValue(3, 2) == 0);
+    assert(m.size() == 25);
+
+    Matrix m4(2, 2);
+    m4.setValue(0, 0, 1);
+    m4.setValue(0, 1, 2);
+    m4.setValue(1, 0, 3);
+    m4.setValue(1, 1, 4);
+    
+    Matrix m5(m4);
+    assert(m5.getRows() == 2);
+    assert(m5.getColumns() == 2);
+    assert(m5.getValue(0, 0) == 1);
+    assert(m5.getValue(1, 1) == 4);
+
+    cout << "Успешно!\u2705" << endl;  
 }
 
-void testMatrix::testAssignmentOperator()
+void testMatrix::testAssignmentOperatorMatrix()
 {
-    return;
+    cout << "Тестирование операторов началось..." << endl;
+
+    Matrix m1(2, 3);
+    m1.setValue(0, 0, 1);
+    m1.setValue(0, 1, 2);
+    m1.setValue(0, 2, 3);
+    m1.setValue(1, 0, 4);
+    m1.setValue(1, 1, 5);
+    m1.setValue(1, 2, 6);
+
+    Matrix m2;
+
+    // Присваивание
+    m2 = m1;
+    
+    // Проверка копирования
+    assert(m2.getRows() == 2);
+    assert(m2.getColumns() == 3);
+    assert(m2.getValue(0, 0) == 1);
+    assert(m2.getValue(1, 2) == 6);
+    
+    // Проверка глубокого копирования
+    m1.setValue(0, 0, 99);
+    assert(m2.getValue(0, 0) == 1); // Копия не изменилась
+    
+    // Присваивание матриц разных размеров
+    Matrix m3(1, 1);
+    m3 = m1;
+    assert(m3.getRows() == 2);
+    assert(m3.getColumns() == 3);
+    
+    // Самоприсваивание
+    m3 = m3;
+    assert(m3.getRows() == 2);
+    assert(m3.getColumns() == 3);
+    assert(m3.getValue(0, 1) == 2);
+    
+    // Присваивание пустой матрицы
+    Matrix m4;
+    Matrix m5(3, 3);
+    m5 = m4;
+    assert(m5.getRows() == 0);
+    assert(m5.getColumns() == 0);
+
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testMatrix::testArithmeticOperatorsWithMatrix()
 {
-    return;
+    cout << "Тестирование математических операций началось..." << endl;
+
+    // Сложение матриц
+    Matrix m1(2, 2);
+    m1.setValue(0, 0, 1);
+    m1.setValue(0, 1, 2);
+    m1.setValue(1, 0, 3);
+    m1.setValue(1, 1, 4);
+    
+    Matrix m2(2, 2);
+    m2.setValue(0, 0, 5);
+    m2.setValue(0, 1, 6);
+    m2.setValue(1, 0, 7);
+    m2.setValue(1, 1, 8);
+    
+    Matrix sum = m1 + m2;
+    assert(sum.getRows() == 2);
+    assert(sum.getColumns() == 2);
+    assert(sum.getValue(0, 0) == 6);
+    assert(sum.getValue(0, 1) == 8);
+    assert(sum.getValue(1, 0) == 10);
+    assert(sum.getValue(1, 1) == 12);
+    
+    // Вычитание матриц
+    Matrix diff = m2 - m1;
+    assert(diff.getRows() == 2);
+    assert(diff.getColumns() == 2);
+    assert(diff.getValue(0, 0) == 4);
+    assert(diff.getValue(0, 1) == 4);
+    assert(diff.getValue(1, 0) == 4);
+    assert(diff.getValue(1, 1) == 4);
+    
+    // Умножение матриц
+    Matrix m3(2, 3);
+    m3.setValue(0, 0, 1);
+    m3.setValue(0, 1, 2);
+    m3.setValue(0, 2, 3);
+    m3.setValue(1, 0, 4);
+    m3.setValue(1, 1, 5);
+    m3.setValue(1, 2, 6);
+    
+    Matrix m4(3, 2);
+    m4.setValue(0, 0, 7);
+    m4.setValue(0, 1, 8);
+    m4.setValue(1, 0, 9);
+    m4.setValue(1, 1, 10);
+    m4.setValue(2, 0, 11);
+    m4.setValue(2, 1, 12);
+    
+    Matrix mult = m3 * m4;
+    assert(mult.getRows() == 2);
+    assert(mult.getColumns() == 2);
+    assert(mult.getValue(0, 0) == 58);   // 1*7 + 2*9 + 3*11
+    assert(mult.getValue(0, 1) == 64);   // 1*8 + 2*10 + 3*12
+    assert(mult.getValue(1, 0) == 139);  // 4*7 + 5*9 + 6*11
+    assert(mult.getValue(1, 1) == 154);  // 4*8 + 5*10 + 6*12
+
+    cout << "Успешно!\u2705" << endl;
 }
 
-void testMatrix::testArithmeticOperatorsWithInt()
+void testMatrix::testArithmeticOperatorsMatrixWithInt()
 {
-    return;
+    Matrix m1(2, 2);
+    m1.setValue(0, 0, 2);
+    m1.setValue(0, 1, 4);
+    m1.setValue(1, 0, 6);
+    m1.setValue(1, 1, 8);
+    
+    // Умножение матрицы на скаляр (int)
+    Matrix mult = m1 * 3;
+    assert(mult.getRows() == 2);
+    assert(mult.getColumns() == 2);
+    assert(mult.getValue(0, 0) == 6);
+    assert(mult.getValue(0, 1) == 12);
+    assert(mult.getValue(1, 0) == 18);
+    assert(mult.getValue(1, 1) == 24);
+    
+    // Умножение на отрицательный скаляр
+    Matrix multNeg = m1 * (-2);
+    assert(multNeg.getValue(0, 0) == -4);
+    assert(multNeg.getValue(1, 1) == -16);
+    
+    // Умножение на ноль
+    Matrix multZero = m1 * 0;
+    assert(multZero.getValue(0, 0) == 0);
+    assert(multZero.getValue(1, 1) == 0);
 }
 
-void testMatrix::testEdgeCases()
+void testMatrix::testEdgeCasesMatrix()
 {
-    return;
+    // Пустая матрица
+    Matrix empty;
+    assert(empty.getRows() == 0);
+    assert(empty.getColumns() == 0);
+    assert(empty.size() == 0);
+    
+    // Матрица 1x1
+    Matrix single(1, 1);
+    single.setValue(0, 0, 42);
+    assert(single.getRows() == 1);
+    assert(single.getColumns() == 1);
+    assert(single.getValue(0, 0) == 42);
+    
+    // Прямоугольные матрицы
+    Matrix rect1(3, 5);
+    assert(rect1.getRows() == 3);
+    assert(rect1.getColumns() == 5);
+    assert(rect1.size() == 15);
+    
+    Matrix rect2(5, 3);
+    assert(rect2.getRows() == 5);
+    assert(rect2.getColumns() == 3);
+    assert(rect2.size() == 15);
+    
+    // Матрица с отрицательными значениями
+    Matrix neg(2, 2);
+    neg.setValue(0, 0, -1);
+    neg.setValue(0, 1, -2);
+    neg.setValue(1, 0, -3);
+    neg.setValue(1, 1, -4);
+    
+    assert(neg.getValue(0, 0) == -1);
+    assert(neg.getValue(1, 1) == -4);
+    
+    // Матрица с нулевыми размерами
+    Matrix zeroSize(0, 5);
+    assert(zeroSize.getRows() == 0);
+    assert(zeroSize.getColumns() == 5);
+    assert(zeroSize.size() == 0);
 }

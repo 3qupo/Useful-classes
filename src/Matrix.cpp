@@ -33,6 +33,12 @@ Matrix::Matrix(const Matrix& other)
     }
 }
 
+// Matrix::Matrix(LongNumber rows, LongNumber columns)
+// {
+//     _rows = rows;
+
+// }
+
 Matrix::~Matrix()
 {
     deallocateMemory();
@@ -88,20 +94,25 @@ Matrix Matrix::operator - (const Matrix& other) const
     return result;
 }
 
-// Matrix Matrix::operator * (const Matrix& other) const
-// {
-//     if(_rows != other._columns) throw invalid_argument("The row length must be equal to the column length\n");
+// TODO: i don't understand how i need to make it
+Matrix Matrix::operator * (const Matrix& other) const
+{
+    if(_rows != other._columns) throw invalid_argument("The row length must be equal to the column length\n");
 
-//     Matrix result(_rows, other._columns);
+    Matrix result(_rows, other._columns);
 
-//     for(size_t i = 0; i < _rows; i++)
-//     {
-//         for(size_t j = 0; j < _columns; j++) {
-//             result.setValue()
-//         }
-//     }
-//     return *this;
-// }
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++) {
+            int sum = 0;
+            for(size_t k = 0; k < _columns; k++) {
+                sum += getValue(i, k) * getValue(k, j);
+            }
+            result.setValue(i, j, sum);
+        }
+    }
+    return *this;
+}
 
 Matrix Matrix::operator * (int other) const
 {
@@ -116,18 +127,18 @@ Matrix Matrix::operator * (int other) const
     return result;
 }
 
-// Matrix Matrix::operator * (LongNumber other) const
-// {
-//     Matrix result(_rows, _columns);
+Matrix Matrix::operator * (LongNumber other) const
+{
+    Matrix result(_rows, _columns);
 
-//     for(size_t i = 0; i < _rows; i++)
-//     {
-//         for(size_t j = 0; j < _columns; j++) {
-//             result.setValue(i, j, number * other);
-//         }
-//     }
-//     return *this;
-// }
+    for(size_t i = 0; i < _rows; i++)
+    {
+        for(size_t j = 0; j < _columns; j++) {
+            result.setValue(i, j, getValue(i, j) * other);
+        }
+    }
+    return *this;
+}
 
 Matrix Matrix::transposition()
 {

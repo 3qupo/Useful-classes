@@ -5,21 +5,21 @@
 
 namespace testsLongNumber
 {
-    void testAssignmentOperator();
-    void testIndexOperator();
+    void testAssignmentOperatorLongNumber();
+    void testIndexOperatorLongNumber();
     void testArithmeticOperatorsWithLongNumber();
-    void testArithmeticOperatorsWithInt();
+    void testArithmeticOperatorsLongNumberWithInt();
     void testComparisonOperatorsWithLongNumber();
-    void testComparisonOperatorsWithInt();
-    void testEdgeCases();
-    void testMixedOperations();
+    void testComparisonOperatorsLongNumberWithInt();
+    void testEdgeCasesLongNumber();
+    void testMixedOperationsLongNumber();
 }
 
 namespace testMatrix
 {
     void testCreateMatrix();
-    void testAssignmentOperator();
+    void testAssignmentOperatorMatrix();
     void testArithmeticOperatorsWithMatrix();
-    void testArithmeticOperatorsWithInt();
-    void testEdgeCases();
+    void testArithmeticOperatorsMatrixWithInt();
+    void testEdgeCasesMatrix();
 }

@@ -122,30 +122,8 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         return result;
     }
 
-    if(_isNegative && !other._isNegative)
-    {
-        
-    }
-    // size_t shift = 0;
-    // size_t result_size = max(_size, other._size) + 1;
-    // int j = _size - 1, k = other._size - 1;
-    // LongNumber result(result_size);
-
-    // for (size_t i = result._size - 1; i > 0; i--) 
-    // {
-    //     size_t sum = shift;
-
-    //     if (j >= 0) sum += _digits[j] - '0';
-    //     if (k >= 0) sum += other._digits[k] - '0';
-
-    //     result._digits[i] = (sum % 10) + '0';
-    //     shift = sum / 10;
-
-    //     j--; k--;
-    // }
-
-    // if (shift) result._digits[0] = shift;
-    // else result.RemovingLeadingZeros();
+    if(_isNegative && !other._isNegative) return *this - other;
+    if(!_isNegative && other._isNegative) return other - *this;
 
     return LongNumber("0");
 }
@@ -174,66 +152,75 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
     return result;
 }
 
-LongNumber LongNumber::substractAbsolute(const LongNumber& other) const 
+
+LongNumber LongNumber::operator - (const LongNumber &other) const
 {
+    if(!_isNegative && !other._isNegative)
+    {
+        LongNumber temp = *this;
+        temp._isNegative = false;
+        LongNumber result = temp + other;
+        result._isNegative = true;
+        return result;
+    }
+    else if(!_isNegative && other._isNegative)
+    {
+        LongNumber temp = other._isNegative;
+        temp._isNegative = false;
+        return *this + temp;
+    }
+    else if(_isNegative && other._isNegative)
+    {
+        LongNumber temp1 = *this;
+        LongNumber temp2 = other;
+        temp1._isNegative = false;
+        temp2._isNegative = false;
+        return temp2 - temp1;
+    }
+
     if(*this == other) return LongNumber("0");
 
     LongNumber result;
-    int borrow = 0;
 
-    
-    return *this;
-}
-
-// TODO: second. Сделать операторы (проблема c отрицательными числами)
-LongNumber LongNumber::operator - (const LongNumber &other) const
-{
-    if (*this == other) return LongNumber("0");
-
-    LongNumber result;
-    int borrow = 0;
-
-    // A > B
     if (*this > other)
     {
         result._size = _size;
+        result._isNegative = _isNegative;
         result._digits = new char[_size + 1];
         result._digits[_size] = '\0';
 
         int i = _size - 1;
         int j = other._size - 1;
+        int borrow = 0;
 
-        while (i >= 0)
+        while (i > 0)
         {
             int a = _digits[i] - '0';
             int b = (j >= 0) ? (other._digits[j] - '0') : 0;
             int diff = a - b - borrow;
 
-            if (diff < 0)
+            if(diff < 0)
             {
                 diff += 10;
                 borrow = 1;
             }
-            else
-                borrow = 0;
+            else borrow = 0;
 
             result._digits[i] = diff + '0';
             i--; j--;
         }
-
-        return result.RemovingLeadingZeros();
     }
 
     else
     {
-        result._size = other._size + 1;
-        result._digits = new char[result._size + 1];
-        result._digits[result._size] = '\0';
-        result._digits[0] = '-';
+        result._size = other._size;
+        result._isNegative = other._isNegative;
+        result._digits = new char[other._size + 1];
+        result._digits[_size] = '\0';
 
         int i = _size - 1;
         int j = other._size - 1;
-        int k = result._size - 1;
+        int borrow = 0;
 
         while (j >= 0)
         {
@@ -241,19 +228,19 @@ LongNumber LongNumber::operator - (const LongNumber &other) const
             int b = other._digits[j] - '0';
             int diff = b - a - borrow;
 
-            if (diff < 0)
+            if(diff < 0)
             {
                 diff += 10;
                 borrow = 1;
             }
             else borrow = 0;
 
-            result._digits[k] = diff + '0';
-            i--; j--; k--;
+            result._digits[i] = diff + '0';
+            i--; j--;
         }
-
-        return result.RemovingLeadingZeros();
     }
+
+    return result.RemovingLeadingZeros();
 }
 
 // (-a) × b = -(a × b)
@@ -318,45 +305,65 @@ LongNumber LongNumber::operator % (const LongNumber& other) const
     return result;
 }
 
-// LongNumber LongNumber::operator + (const int& other) const
-// {
-//     if(other == 0) return *this;
-//     if(_size == 0) return LongNumber(other);
+// TODO: you need to check it
+LongNumber LongNumber::operator + (const int& other) const
+{
+    if(other == 0) return *this;
+    if(_size == 0) return LongNumber(other);
 
-//     bool this_negative
-//     size_t shift = 0;
-//     size_t sum = 0;
-//     int copy_other = other;
-//     size_t result_size = max(static_cast<int>(getSize()), length(other)) + 1;
-//     LongNumber result(result_size);
-//     size_t j = getSize() - 1;
-//     size_t k = length(other) - 1;
-//     size_t index_this = getSize() - 1;
+    size_t shift = 0;
+    size_t sum = 0;
+    int copy_other = other;
+    size_t result_size = max(static_cast<int>(getSize()), length(other)) + 1;
+    LongNumber result(result_size);
+    size_t j = getSize() - 1;
+    size_t k = length(other) - 1;
+    size_t index_this = getSize() - 1;
 
-//     for(size_t i = result_size - 1; i > 0; i--)
-//     {
-//         sum = shift;
+    for(size_t i = result_size - 1; i > 0; i--)
+    {
+        sum = shift;
 
-//         if(index_this < getSize())
-//         {
-//             sum += _digits[index_this] - '0';
-//             if(index_this > 0) index_this--;
-//         }
-//         sum += _digits[i] - '0';
-//         copy_other > 0 ? (sum += copy_other % 10) : sum += 0;
+        if(index_this < getSize())
+        {
+            sum += _digits[index_this] - '0';
+            if(index_this > 0) index_this--;
+        }
+        sum += _digits[i] - '0';
+        copy_other > 0 ? (sum += copy_other % 10) : sum += 0;
 
-//         result._digits[i] = (sum % 10) + '0';
-//         shift = sum / 10;
+        result._digits[i] = (sum % 10) + '0';
+        shift = sum / 10;
 
-//         j--; 
-//         if(copy_other > 0) copy_other /= 10;
-//     }
+        j--; 
+        if(copy_other > 0) copy_other /= 10;
+    }
 
-//     if(shift) result._digits[0] = shift + '0';
-//     else result.RemovingLeadingZeros();
+    if(shift) result._digits[0] = shift + '0';
+    else result.RemovingLeadingZeros();
 
-//     return result;
-// }
+    return result;
+}
+
+LongNumber LongNumber::operator - (const int& other) const
+{
+    return *this;
+}
+
+LongNumber LongNumber::operator * (const int& other) const
+{
+    return *this;
+}
+
+LongNumber LongNumber::operator / (const int& other) const
+{
+    return *this;
+}
+
+LongNumber LongNumber::operator % (const int& other) const
+{
+    return *this;
+}
 
 bool LongNumber::operator == (const LongNumber &other) const 
 {
@@ -632,40 +639,26 @@ LongNumber &LongNumber::RemovingLeadingZeros()
 
     int start = 0;                                          // индекс начала значащих цифр
 
-    bool is_negative = false;
-    if(_digits[0] == '-')
-    {
-        is_negative = true;
-        start = 1;
-    }
+    if(_isNegative) start = 1;
 
     while(start < _size && _digits[start] == '0') start++;
 
-    if(start == _size)
+    if(start > 0)
     {
+        size_t newSize = _size - start;
+        char* newDigits = new char[newSize + 1];
+
+        for(size_t i = 0; i < newSize; i++) {
+            newDigits[i] = _digits[start + i];
+        }
+        newDigits[newSize] = '\0';
+
         delete[] _digits;
-        _size = 1;
-        _digits = new char[_size + 1];
-        _digits[0] = '0';
-        _digits[1] = '\0';
-
-        return *this;
+        _digits = newDigits;
+        _size = newSize;
     }
 
-    int newSize = _size - start - (is_negative ? 1 : 0);
-    char* temp = new char[newSize + 1];
-
-    int j = 0;
-    if(is_negative) temp[j++] = '-';
-
-    for(int i = start; i < _size; i++) {
-        temp[j++] = _digits[i];
-    }
-
-    temp[j] = '\0';
-    delete[] _digits;
-    _digits = temp;
-    _size = newSize;
+    if(_size == 1 && _digits[0] == '0') _isNegative = false;
 
     return *this;
 }
