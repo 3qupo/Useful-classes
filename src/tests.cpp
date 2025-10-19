@@ -39,7 +39,7 @@ void testsLongNumber::testAssignmentOperatorLongNumber()
     test1 = test1;
     assert(test1 == num1);
     
-    cout << "Assignment operator tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testIndexOperatorLongNumber() 
@@ -61,7 +61,7 @@ void testsLongNumber::testIndexOperatorLongNumber()
     // Восстановление исходного значения
     num[0] = '1';
     
-    cout << "Index operator tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testArithmeticOperatorsWithLongNumber() 
@@ -96,7 +96,7 @@ void testsLongNumber::testArithmeticOperatorsWithLongNumber()
     assert(e / f == LongNumber("33"));
     assert(e % f == LongNumber("1"));
     
-    cout << "Arithmetic operators with LongNumber tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testArithmeticOperatorsLongNumberWithInt() 
@@ -125,7 +125,7 @@ void testsLongNumber::testArithmeticOperatorsLongNumberWithInt()
     assert(a / 2 == LongNumber("61"));
     assert(a % 2 == LongNumber("1"));
     
-    cout << "Arithmetic operators with int tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testComparisonOperatorsWithLongNumber() 
@@ -165,7 +165,7 @@ void testsLongNumber::testComparisonOperatorsWithLongNumber()
     assert(a <= b);
     assert(c <= a);
     
-    cout << "Comparison operators with LongNumber tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testComparisonOperatorsLongNumberWithInt() 
@@ -203,7 +203,7 @@ void testsLongNumber::testComparisonOperatorsLongNumberWithInt()
     assert(b <= -50);
     assert(b <= 0);
     
-    cout << "Comparison operators with int tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testEdgeCasesLongNumber() 
@@ -234,7 +234,7 @@ void testsLongNumber::testEdgeCasesLongNumber()
     assert(neg - pos == LongNumber("-579"));
     assert(pos - neg == LongNumber("579"));
     
-    cout << "Edge cases tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testsLongNumber::testMixedOperationsLongNumber() 
@@ -255,7 +255,7 @@ void testsLongNumber::testMixedOperationsLongNumber()
     assert(a * b >= LongNumber("45"));
     assert(c * b < a);
     
-    cout << "Mixed operations tests passed!" << endl;
+    cout << "Успешно!\u2705" << endl;
 }
 
 // ----------------------- Matrix -----------------------
@@ -402,6 +402,8 @@ void testMatrix::testArithmeticOperatorsWithMatrix()
 
 void testMatrix::testArithmeticOperatorsMatrixWithInt()
 {
+    cout << "Тестирование математических операций над матрицей и int началось..." << endl;
+
     Matrix m1(2, 2);
     m1.setValue(0, 0, 2);
     m1.setValue(0, 1, 4);
@@ -426,10 +428,14 @@ void testMatrix::testArithmeticOperatorsMatrixWithInt()
     Matrix multZero = m1 * 0;
     assert(multZero.getValue(0, 0) == 0);
     assert(multZero.getValue(1, 1) == 0);
+
+    cout << "Успешно!\u2705" << endl;
 }
 
 void testMatrix::testEdgeCasesMatrix()
 {
+    cout << "Тестирование обращений к элементам матрицы" << endl;
+
     // Пустая матрица
     Matrix empty;
     assert(empty.getRows() == 0);
@@ -469,4 +475,6 @@ void testMatrix::testEdgeCasesMatrix()
     assert(zeroSize.getRows() == 0);
     assert(zeroSize.getColumns() == 5);
     assert(zeroSize.size() == 0);
+
+    cout << "Успешно!\u2705" << endl;
 }

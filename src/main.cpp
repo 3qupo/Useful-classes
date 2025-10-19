@@ -14,32 +14,30 @@ int main()
     cout << "Starting LongNumber tests..." << endl << endl;
     
     try {
-        testCreateMatrix();
-        testAssignmentOperatorMatrix();
-        testArithmeticOperatorsWithMatrix();
-        // testAssignmentOperatorLongNumber();
-        // cout << endl;
         
-        // testIndexOperator();
-        // cout << endl;
+        testAssignmentOperatorLongNumber();
+        cout << endl;
         
-        // testArithmeticOperatorsWithLongNumber();
-        // cout << endl;
+        testIndexOperatorLongNumber();
+        cout << endl;
         
-        // testArithmeticOperatorsWithInt();
-        // cout << endl;
+        testArithmeticOperatorsWithLongNumber();
+        cout << endl;
         
-        // testComparisonOperatorsWithLongNumber();
-        // cout << endl;
+        testArithmeticOperatorsLongNumberWithInt();
+        cout << endl;
         
-        // testComparisonOperatorsWithInt();
-        // cout << endl;
+        testComparisonOperatorsWithLongNumber();
+        cout << endl;
         
-        // testEdgeCases();
-        // cout << endl;
+        testComparisonOperatorsLongNumberWithInt();
+        cout << endl;
         
-        // testMixedOperations();
-        // cout << endl;
+        testEdgeCasesLongNumber();
+        cout << endl;
+        
+        testMixedOperationsLongNumber();
+        cout << endl;
         
         cout << "====================================" << endl;
         cout << "ALL TESTS PASSED SUCCESSFULLY!" << endl;
