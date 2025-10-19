@@ -1,4 +1,5 @@
 #include "../include/LongNumber.h"
+
 #include <cmath>
 #include <cstring>
 #include <iostream>
@@ -113,17 +114,55 @@ char& LongNumber::operator [] (const size_t index)
 
 LongNumber LongNumber::operator + (const LongNumber &other) const 
 {
+    if(!_isNegative && !other._isNegative) return addAbsolute(other);
+    if(_isNegative && !other._isNegative)
+    {
+        LongNumber result = addAbsolute(other);
+        result._isNegative = true;
+        return result;
+    }
+
+    if(_isNegative && !other._isNegative)
+    {
+        
+    }
+    // size_t shift = 0;
+    // size_t result_size = max(_size, other._size) + 1;
+    // int j = _size - 1, k = other._size - 1;
+    // LongNumber result(result_size);
+
+    // for (size_t i = result._size - 1; i > 0; i--) 
+    // {
+    //     size_t sum = shift;
+
+    //     if (j >= 0) sum += _digits[j] - '0';
+    //     if (k >= 0) sum += other._digits[k] - '0';
+
+    //     result._digits[i] = (sum % 10) + '0';
+    //     shift = sum / 10;
+
+    //     j--; k--;
+    // }
+
+    // if (shift) result._digits[0] = shift;
+    // else result.RemovingLeadingZeros();
+
+    return LongNumber("0");
+}
+
+LongNumber LongNumber::addAbsolute(const LongNumber& other) const
+{
     size_t shift = 0;
+    size_t sum = 0;
     size_t result_size = max(_size, other._size) + 1;
-    int j = _size - 1, k = other._size - 1;
+    int j = _size - 1; 
+    int k = other._size - 1;
     LongNumber result(result_size);
 
-    for (size_t i = result._size - 1; i > 0; i--) 
+    for(size_t i = result_size - 1; i > 0; i--)
     {
-        size_t sum = shift;
-
-        if (j >= 0) sum += _digits[j] - '0';
-        if (k >= 0) sum += other._digits[k] - '0';
+        if(j >= 0) sum += _digits[i] - '0';
+        if(k >= 0) sum += other._digits[i] - '0';
 
         result._digits[i] = (sum % 10) + '0';
         shift = sum / 10;
@@ -131,10 +170,19 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         j--; k--;
     }
 
-    if (shift) result._digits[0] = shift;
-    else result.RemovingLeadingZeros();
-
+    result.RemovingLeadingZeros();
     return result;
+}
+
+LongNumber LongNumber::substractAbsolute(const LongNumber& other) const 
+{
+    if(*this == other) return LongNumber("0");
+
+    LongNumber result;
+    int borrow = 0;
+
+    
+    return *this;
 }
 
 // TODO: second. Сделать операторы (проблема c отрицательными числами)
@@ -312,10 +360,11 @@ LongNumber LongNumber::operator % (const LongNumber& other) const
 
 bool LongNumber::operator == (const LongNumber &other) const 
 {
-    if (_size != other._size)
-        return false;
+    if (_isNegative != other._isNegative) return false;
+    if (_size != other._size) return false;
 
-    for (int i = 0; i < _size; i++) {
+    for (int i = 0; i < _size; i++) 
+    {
         if (_digits[i] != other._digits[i])
         return false;
     }
@@ -325,6 +374,7 @@ bool LongNumber::operator == (const LongNumber &other) const
 
 bool LongNumber::operator != (const LongNumber &other) const 
 {
+    if (_isNegative != other._isNegative) return true;
     if (_size != other._size) return true;
 
     for (int i = 0; i < _size; i++) 
@@ -338,8 +388,7 @@ bool LongNumber::operator != (const LongNumber &other) const
 
 bool LongNumber::operator > (const LongNumber &other) const 
 {
-    // if(_size > other._size) return true;
-    // if(_size < other._size) return false;
+    if (_isNegative != other._isNegative) return _isNegative > other._isNegative;
     if (_size != other._size) return _size > other._size;
 
     for (int i = 0; i < _size; i++) 
@@ -353,8 +402,7 @@ bool LongNumber::operator > (const LongNumber &other) const
 
 bool LongNumber::operator >= (const LongNumber &other) const 
 {
-    // if(_size > other._size) return true;
-    // if(_size < other._size) return false;
+    if (_isNegative != other._isNegative) return _isNegative > other._isNegative;
     if (_size != other._size) return _size > other._size;
 
     for (int i = 0; i < _size; i++) 
@@ -368,6 +416,7 @@ bool LongNumber::operator >= (const LongNumber &other) const
 
 bool LongNumber::operator < (const LongNumber &other) const 
 {
+    if (_isNegative != other._isNegative) return _isNegative;
     if (_size != other._size) return _size < other._size;
 
     for (int i = 0; i < _size; i++) 
@@ -381,6 +430,7 @@ bool LongNumber::operator < (const LongNumber &other) const
 
 bool LongNumber::operator <= (const LongNumber &other) const 
 {
+    if (_isNegative != other._isNegative) return _isNegative < other._isNegative;
     if (_size != other._size) return _size < other._size;
 
     for (int i = 0; i < _size; i++) 
@@ -394,6 +444,8 @@ bool LongNumber::operator <= (const LongNumber &other) const
 
 bool LongNumber::operator == (const int &other) const 
 {
+    if (_isNegative && other > 0) return false;
+    if (!_isNegative && other < 0) return false;
     if (_size != length(other)) return false;
 
     int copy = other;
@@ -410,6 +462,8 @@ bool LongNumber::operator == (const int &other) const
 
 bool LongNumber::operator != (const int &other) const 
 {
+    if (_isNegative && other > 0) return true;
+    if (!_isNegative && other < 0) return true;
     if (_size != length(other)) return true;
 
     int copy = other;
@@ -427,9 +481,11 @@ bool LongNumber::operator != (const int &other) const
 
 bool LongNumber::operator < (const int &other) const 
 {
+    if (_isNegative && other > 0) return false;
+    if (!_isNegative && other < 0) return false;
     int lenght_int = length(other);
     if (_size < lenght_int) return true;
-    else if (_size > lenght_int) return false;
+    if (_size > lenght_int) return false;
 
     int divisor = 1;
     int digit_int = 0;
@@ -454,6 +510,8 @@ bool LongNumber::operator < (const int &other) const
 
 bool LongNumber::operator <= (const int &other) const 
 {
+    if (_isNegative && other > 0) return true;
+    if (!_isNegative && other < 0) return true;
     int lenght_int = length(other);
     if (_size < lenght_int) return true;
     else if (_size > lenght_int) return false;
@@ -481,6 +539,8 @@ bool LongNumber::operator <= (const int &other) const
 
 bool LongNumber::operator > (const int &other) const 
 {
+    if (_isNegative && other > 0) return false;
+    if (!_isNegative && other < 0) return false;
     int lenght_int = length(other);
 
     if (_size > lenght_int) return true;
@@ -507,12 +567,12 @@ bool LongNumber::operator > (const int &other) const
 
 bool LongNumber::operator >= (const int &other) const 
 {
+    if (_isNegative && other > 0) return false;
+    if (!_isNegative && other < 0) return false;
     int lenght_int = length(other);
 
-    if (_size > lenght_int)
-        return true;
-    else if (_size < lenght_int)
-        return false;
+    if (_size > lenght_int) return true;
+    else if (_size < lenght_int) return false;
 
     int divisor = 1;
     int digit_int = 0;
@@ -556,16 +616,6 @@ bool LongNumber::getIsNegative() const {
     return _isNegative;
 }
 
-LongNumber LongNumber::addAbsolute(const LongNumber& other) const
-{
-    return *this;
-}
-
-LongNumber LongNumber::substractAbsolute(const LongNumber& other) const 
-{
-    return *this;
-}
-
 void LongNumber::print() 
 {
     if (_size == 0 || _digits == nullptr) return;
@@ -575,45 +625,6 @@ void LongNumber::print()
     }
     cout << endl;
 }
-
-
-// TODO: why do u need it?
-// const LongNumber LongNumber::resize(const size_t &size) const 
-// {
-//     if (_size == size) return *this;
-
-//     char *new_digits = new char[size]();
-
-//     for (int i = 0; i < size - _size; i++) {
-//         new_digits[i] = '0';
-//     }
-
-//     int j = 0;
-//     for (int i = size - _size; i < size; i++) {
-//         new_digits[i] = _digits[j++];
-//     }
-
-//     // delete[] _digits;
-//     // _digits = new_digits;
-//     // _size = size;
-
-//     // return *this;
-//     return new_digits;
-// }
-
-// const LongNumber &LongNumber::findMax(const LongNumber &first,
-//                                       const LongNumber &second) {
-//     if (first._size > second._size) return first;
-//     else if (first._size < second._size) return second;
-
-//     for (int i = 0; i < _size; i++) 
-//     {
-//         if (first._digits[i] > second._digits[i]) return first;
-//         else if (first._digits[i] < second._digits[i]) return second;
-//     }
-
-//     return first;
-// }
 
 LongNumber &LongNumber::RemovingLeadingZeros() 
 {
@@ -657,4 +668,44 @@ LongNumber &LongNumber::RemovingLeadingZeros()
     _size = newSize;
 
     return *this;
+}
+
+
+// trash
+// TODO: why do u need it?
+const LongNumber LongNumber::resize(const size_t &size) const 
+{
+    if (_size == size) return *this;
+
+    char *new_digits = new char[size]();
+
+    for (int i = 0; i < size - _size; i++) {
+        new_digits[i] = '0';
+    }
+
+    int j = 0;
+    for (int i = size - _size; i < size; i++) {
+        new_digits[i] = _digits[j++];
+    }
+
+    // delete[] _digits;
+    // _digits = new_digits;
+    // _size = size;
+
+    // return *this;
+    return new_digits;
+}
+
+const LongNumber &LongNumber::findMax(const LongNumber &first,
+                                      const LongNumber &second) {
+    if (first._size > second._size) return first;
+    else if (first._size < second._size) return second;
+
+    for (int i = 0; i < _size; i++) 
+    {
+        if (first._digits[i] > second._digits[i]) return first;
+        else if (first._digits[i] < second._digits[i]) return second;
+    }
+
+    return first;
 }

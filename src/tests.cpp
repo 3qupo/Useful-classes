@@ -2,9 +2,15 @@
 #include <cassert>
 
 #include "../include/LongNumber.h"  
+#include "../include/Matrix.h"
 #include "../include/tests.h"
 
+// \u274C ❌
+// \u2705 ✅
+
 using namespace std;
+
+// ------------------------ LongNumber ------------------------
 
 void testsLongNumber::testAssignmentOperator() 
 {
@@ -250,4 +256,31 @@ void testsLongNumber::testMixedOperations()
     assert(c * b < a);
     
     cout << "Mixed operations tests passed!" << endl;
+}
+
+// ----------------------- Matrix -----------------------
+
+void testMatrix::testCreateMatrix()
+{
+    return;   
+}
+
+void testMatrix::testAssignmentOperator()
+{
+    return;
+}
+
+void testMatrix::testArithmeticOperatorsWithMatrix()
+{
+    return;
+}
+
+void testMatrix::testArithmeticOperatorsWithInt()
+{
+    return;
+}
+
+void testMatrix::testEdgeCases()
+{
+    return;
 }

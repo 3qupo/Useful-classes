@@ -15,7 +15,11 @@ namespace testsLongNumber
     void testMixedOperations();
 }
 
-// namespace testMatrix
-// {
-
-// }
+namespace testMatrix
+{
+    void testCreateMatrix();
+    void testAssignmentOperator();
+    void testArithmeticOperatorsWithMatrix();
+    void testArithmeticOperatorsWithInt();
+    void testEdgeCases();
+}
