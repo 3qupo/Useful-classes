@@ -5,3 +5,5 @@
 ../.PVS-Studio/
 ../.vscode/
 /venv/
+.vscode/settings.json
+.vscode/
