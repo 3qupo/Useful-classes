@@ -123,7 +123,7 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
     }
 
     if(_isNegative && !other._isNegative) return *this - other;
-    if(!_isNegative && other._isNegative) return other - *this;
+    if(!_isNegative && other._isNegative) return *this - other;
 
     return LongNumber("0");
 }
@@ -137,10 +137,12 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
     int k = other._size - 1;
     LongNumber result(result_size);
 
-    for(size_t i = result_size - 1; i > 0; i--)
+    for(int i = result_size - 1; i >= 0; i--)
     {
-        if(j >= 0) sum += _digits[i] - '0';
-        if(k >= 0) sum += other._digits[i] - '0';
+        sum = shift;
+
+        if(j >= 0) sum += _digits[j] - '0';
+        if(k >= 0) sum += other._digits[k] - '0';
 
         result._digits[i] = (sum % 10) + '0';
         shift = sum / 10;
@@ -152,7 +154,7 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
     return result;
 }
 
-
+// TODO: Надо тут переделать все
 LongNumber LongNumber::operator - (const LongNumber &other) const
 {
     if(!_isNegative && !other._isNegative)
@@ -661,44 +663,4 @@ LongNumber &LongNumber::RemovingLeadingZeros()
     if(_size == 1 && _digits[0] == '0') _isNegative = false;
 
     return *this;
-}
-
-
-// trash
-// TODO: why do u need it?
-const LongNumber LongNumber::resize(const size_t &size) const 
-{
-    if (_size == size) return *this;
-
-    char *new_digits = new char[size]();
-
-    for (int i = 0; i < size - _size; i++) {
-        new_digits[i] = '0';
-    }
-
-    int j = 0;
-    for (int i = size - _size; i < size; i++) {
-        new_digits[i] = _digits[j++];
-    }
-
-    // delete[] _digits;
-    // _digits = new_digits;
-    // _size = size;
-
-    // return *this;
-    return new_digits;
-}
-
-const LongNumber &LongNumber::findMax(const LongNumber &first,
-                                      const LongNumber &second) {
-    if (first._size > second._size) return first;
-    else if (first._size < second._size) return second;
-
-    for (int i = 0; i < _size; i++) 
-    {
-        if (first._digits[i] > second._digits[i]) return first;
-        else if (first._digits[i] < second._digits[i]) return second;
-    }
-
-    return first;
 }

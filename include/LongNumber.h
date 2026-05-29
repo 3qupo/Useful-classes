@@ -10,7 +10,7 @@ class LongNumber
 private:
     char* _digits;      // without _isNegative
     size_t _size;       // size of _digits without _isNegative
-    bool _isNegative;
+    bool _isNegative;   // !_isNegative -> +, _isNegative -> -
     
 public:
     LongNumber();
@@ -53,8 +53,4 @@ public:
     LongNumber& RemovingLeadingZeros();
     int length(int number) const;
     void print(); 
-
-    // trash 
-    const LongNumber resize(const size_t& size) const;
-    const LongNumber& findMax(const LongNumber& first, const LongNumber& second);
 };
