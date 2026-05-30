@@ -13,6 +13,12 @@ int main()
     
     cout << "Starting LongNumber tests..." << endl << endl;
     
+    LongNumber a("12432");
+    LongNumber b("-432");
+
+    LongNumber result = a - b;
+    result.print();
+
     try {
         
         testAssignmentOperatorLongNumber();

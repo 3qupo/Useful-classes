@@ -157,19 +157,18 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
 // TODO: Надо тут переделать все
 LongNumber LongNumber::operator - (const LongNumber &other) const
 {
+    if(*this == other) return LongNumber("0");
+
     if(!_isNegative && !other._isNegative)
     {
-        LongNumber temp = *this;
-        temp._isNegative = false;
-        LongNumber result = temp + other;
-        result._isNegative = true;
-        return result;
+        return this->substractAbsolute(other);
     }
     else if(!_isNegative && other._isNegative)
     {
-        LongNumber temp = other._isNegative;
-        temp._isNegative = false;
-        return *this + temp;
+        LongNumber result(_size);
+        result._isNegative = true;
+        result = other.addAbsolute(*this);
+        return result;
     }
     else if(_isNegative && other._isNegative)
     {
@@ -179,8 +178,6 @@ LongNumber LongNumber::operator - (const LongNumber &other) const
         temp2._isNegative = false;
         return temp2 - temp1;
     }
-
-    if(*this == other) return LongNumber("0");
 
     LongNumber result;
 
@@ -240,6 +237,34 @@ LongNumber LongNumber::operator - (const LongNumber &other) const
             result._digits[i] = diff + '0';
             i--; j--;
         }
+    }
+
+    return result.RemovingLeadingZeros();
+}
+
+LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
+{
+    int borrow = 0;
+    int sub = 0;
+    int i = _size - 1;
+    int j = other._size - 1;
+    LongNumber result(_size);
+    result._digits[_size] = '\0';
+
+    while(i >= 0)
+    {
+        int a = _digits[i] - '0';
+        int b = (j >= 0) ? (other._digits[j] - '0') : 0;
+        int diff = a - b - borrow;
+
+        if(diff < 0)
+        {
+            diff += 10;
+            borrow = 1;
+        } else borrow = 0;
+
+        result._digits[i] = diff + '0';
+        i--; j--;
     }
 
     return result.RemovingLeadingZeros();
@@ -663,4 +688,10 @@ LongNumber &LongNumber::RemovingLeadingZeros()
     if(_size == 1 && _digits[0] == '0') _isNegative = false;
 
     return *this;
+}
+
+int LongNumber::compareAbsolute(const LongNumber& other) const
+{
+
+    return 0;
 }
