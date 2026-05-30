@@ -14,9 +14,13 @@ int main()
     cout << "Starting LongNumber tests..." << endl << endl;
     
     LongNumber a("12432");
+    LongNumber c("23");
     LongNumber b("-432");
 
-    LongNumber result = a - b;
+    LongNumber result = a + b;
+    result.print();
+
+    result = a + c;
     result.print();
 
     try {

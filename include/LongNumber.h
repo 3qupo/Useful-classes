@@ -50,6 +50,8 @@ public:
     size_t getSize() const;
     bool getIsNegative() const;
     LongNumber addAbsolute(const LongNumber& other) const;
+    LongNumber substractAbsolute(const LongNumber& other) const;
+    int compareAbsolute(const LongNumber& other) const;
     LongNumber& RemovingLeadingZeros();
     int length(int number) const;
     void print(); 

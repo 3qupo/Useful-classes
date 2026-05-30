@@ -115,15 +115,45 @@ char& LongNumber::operator [] (const size_t index)
 LongNumber LongNumber::operator + (const LongNumber &other) const 
 {
     if(!_isNegative && !other._isNegative) return addAbsolute(other);
-    if(_isNegative && !other._isNegative)
+    if(_isNegative && other._isNegative)
     {
         LongNumber result = addAbsolute(other);
         result._isNegative = true;
         return result;
     }
 
-    if(_isNegative && !other._isNegative) return *this - other;
-    if(!_isNegative && other._isNegative) return *this - other;
+    if(_isNegative && !other._isNegative) 
+    {
+        int cmp = compareAbsolute(other);
+
+        // TODO: it's wrong
+        if(cmp == 1)
+        {
+            LongNumber result = other.substractAbsolute(*this);
+            result._isNegative = true;
+            return result;
+        }
+
+        if(cmp == -1)
+        {
+            LongNumber result = 
+        }
+    }
+
+    if(!_isNegative && other._isNegative)
+    {
+        int cmp = compareAbsolute(other);
+
+        if(cmp == 1)
+        {
+
+        }
+
+        if(cmp == -1)
+        {
+
+        }
+    }
 
     return LongNumber("0");
 }
@@ -154,92 +184,43 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
     return result;
 }
 
-// TODO: Надо тут переделать все
 LongNumber LongNumber::operator - (const LongNumber &other) const
 {
     if(*this == other) return LongNumber("0");
 
-    if(!_isNegative && !other._isNegative)
+    if (!_isNegative && !other._isNegative)
     {
-        return this->substractAbsolute(other);
+        int cmp = compareAbsolute(other);
+        if(cmp >= 0) return substractAbsolute(other);
+        else  
+        {
+            LongNumber result = other.substractAbsolute(*this);
+            result._isNegative = true;
+            return result;
+        }
     }
-    else if(!_isNegative && other._isNegative)
+
+    if(!_isNegative && other._isNegative) return this->addAbsolute(other);
+
+    if(_isNegative && !other._isNegative) 
     {
-        LongNumber result(_size);
+        LongNumber result = this->addAbsolute(other);
         result._isNegative = true;
-        result = other.addAbsolute(*this);
         return result;
     }
-    else if(_isNegative && other._isNegative)
+
+    if(_isNegative && other._isNegative)
     {
-        LongNumber temp1 = *this;
-        LongNumber temp2 = other;
-        temp1._isNegative = false;
-        temp2._isNegative = false;
-        return temp2 - temp1;
+        LongNumber tempA = *this;
+        LongNumber tempB = other;
+        tempA._isNegative = false;
+        tempB._isNegative = false;
+
+        return tempB - tempA;
     }
+    
 
-    LongNumber result;
-
-    if (*this > other)
-    {
-        result._size = _size;
-        result._isNegative = _isNegative;
-        result._digits = new char[_size + 1];
-        result._digits[_size] = '\0';
-
-        int i = _size - 1;
-        int j = other._size - 1;
-        int borrow = 0;
-
-        while (i > 0)
-        {
-            int a = _digits[i] - '0';
-            int b = (j >= 0) ? (other._digits[j] - '0') : 0;
-            int diff = a - b - borrow;
-
-            if(diff < 0)
-            {
-                diff += 10;
-                borrow = 1;
-            }
-            else borrow = 0;
-
-            result._digits[i] = diff + '0';
-            i--; j--;
-        }
-    }
-
-    else
-    {
-        result._size = other._size;
-        result._isNegative = other._isNegative;
-        result._digits = new char[other._size + 1];
-        result._digits[_size] = '\0';
-
-        int i = _size - 1;
-        int j = other._size - 1;
-        int borrow = 0;
-
-        while (j >= 0)
-        {
-            int a = (i >= 0) ? (_digits[i] - '0') : 0;
-            int b = other._digits[j] - '0';
-            int diff = b - a - borrow;
-
-            if(diff < 0)
-            {
-                diff += 10;
-                borrow = 1;
-            }
-            else borrow = 0;
-
-            result._digits[i] = diff + '0';
-            i--; j--;
-        }
-    }
-
-    return result.RemovingLeadingZeros();
+    return LongNumber("0");
 }
 
 LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
@@ -248,8 +229,7 @@ LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
     int sub = 0;
     int i = _size - 1;
     int j = other._size - 1;
-    LongNumber result(_size);
-    result._digits[_size] = '\0';
+    LongNumber result(_size);   
 
     while(i >= 0)
     {
@@ -692,6 +672,15 @@ LongNumber &LongNumber::RemovingLeadingZeros()
 
 int LongNumber::compareAbsolute(const LongNumber& other) const
 {
-
+    if (_size > other._size) return 1;
+    else if (_size < other._size) return -1;
+    else if (_size == other._size)
+    {
+        for(int i = 0; i < _size; i++)
+        {
+            if(_digits[i] > other._digits[i]) return 1;
+            if(_digits[i] < other._digits[i]) return -1;
+        }
+    }
     return 0;
 }
