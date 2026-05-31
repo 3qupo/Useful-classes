@@ -61,6 +61,8 @@ LongNumber::LongNumber(const char *array)
     }
 
     _digits[_size] = '\0';
+
+    this->RemovingLeadingZeros();
 }
 
 // конструктор копирования
@@ -126,17 +128,19 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
     {
         int cmp = compareAbsolute(other);
 
-        // TODO: it's wrong
+        // -5 + +3
         if(cmp == 1)
         {
-            LongNumber result = other.substractAbsolute(*this);
+            LongNumber result = substractAbsolute(other);
             result._isNegative = true;
             return result;
         }
 
-        if(cmp == -1)
+        // -3 + +5
+        if(cmp == -1) 
         {
-            LongNumber result = 
+            LongNumber result = other.substractAbsolute(*this);
+            return result;
         }
     }
 
@@ -144,14 +148,20 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
     {
         int cmp = compareAbsolute(other);
 
-        if(cmp == 1)
+        // 5 + -3
+        if(cmp == 1) 
         {
-
+            LongNumber result = substractAbsolute(other);
+            return result;
         }
+        
 
+        // 3 + -5
         if(cmp == -1)
         {
-
+            LongNumber result = other.substractAbsolute(*this);
+            result._isNegative = true;
+            return result;
         }
     }
 
@@ -646,11 +656,9 @@ LongNumber &LongNumber::RemovingLeadingZeros()
 
     int start = 0;                                          // индекс начала значащих цифр
 
-    if(_isNegative) start = 1;
-
     while(start < _size && _digits[start] == '0') start++;
 
-    if(start > 0)
+    if(start > 0 && start < _size)
     {
         size_t newSize = _size - start;
         char* newDigits = new char[newSize + 1];
@@ -663,6 +671,17 @@ LongNumber &LongNumber::RemovingLeadingZeros()
         delete[] _digits;
         _digits = newDigits;
         _size = newSize;
+    }
+
+    else if(start == _size) 
+    {
+        delete[] _digits;
+        _digits = new char[2];
+        _digits[0] = '0';
+        _digits[1] = '\0';
+        _size = 1;
+        _isNegative = false;
+        return *this;
     }
 
     if(_size == 1 && _digits[0] == '0') _isNegative = false;
