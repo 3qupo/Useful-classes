@@ -265,44 +265,32 @@ LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
 // (-a) × (-b) = a × b
 LongNumber LongNumber::operator * (const LongNumber &other) const 
 {
-    if (_digits[0] == '0' || other._digits[0] == '0') return LongNumber("0");
+    if ((_size == 1 && _digits[0] == '0') || (other._size == 1 && other._digits[0] == '0')) 
+        return LongNumber("0");
 
-    bool isNegative = (_digits[0] == '-') ^ (other._digits[0] == '-');
-    int start_i = (_digits[0] == '-') ? 1 : 0;
-    int start_j = (other._digits[0] == '-') ? 1 : 0;
+    size_t result_size = _size + other._size;
+    LongNumber result(result_size);
+    result._isNegative = _isNegative ^ other._isNegative;
 
-    size_t new_size = (_size - start_i) + (other._size - start_j) + 1;
-    LongNumber result(new_size);
-
-    for (int i = _size - 1; i >= start_i; --i) 
+    for (int i = _size - 1; i >= 0; i--) 
     {
         int getThis = _digits[i] - '0';
         int carry = 0;
 
-        for (int j = other._size - 1; j >= start_j; --j) 
+        for (int j = other._size - 1; j >= 0; j--) 
         {
             int getOther = other._digits[j] - '0';
-            int pos = (i - start_i) + (j - start_j) + 1;
+            int pos = i + j + 1;
 
             int sum = (result._digits[pos] - '0') + getThis * getOther + carry;
             result._digits[pos] = (sum % 10) + '0';
             carry = sum / 10;
         }
 
-        int pos = (i - start_i);
-        result._digits[pos] = ((result._digits[pos] - '0') + carry) + '0';
+        result._digits[i] = ((result._digits[i] - '0') + carry) + '0';
     }
 
     result = result.RemovingLeadingZeros();
-
-    if (isNegative && result._digits[0] != '0') 
-    {
-        for (int i = result._size; i > 0; --i) {
-            result._digits[i] = result._digits[i - 1];
-        }
-
-        result._digits[0] = '-';
-    }
 
     return result;
 }
