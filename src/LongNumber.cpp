@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -260,9 +261,7 @@ LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
     return result.RemovingLeadingZeros();
 }
 
-// (-a) × b = -(a × b)
-// a × (-b) = -(a × b)
-// (-a) × (-b) = a × b
+
 LongNumber LongNumber::operator * (const LongNumber &other) const 
 {
     if ((_size == 1 && _digits[0] == '0') || (other._size == 1 && other._digits[0] == '0')) 
@@ -295,10 +294,37 @@ LongNumber LongNumber::operator * (const LongNumber &other) const
     return result;
 }
 
-
+// TODO: Second (Сначала перегрузить оператор сложения LongNumber с int)
 LongNumber LongNumber::operator / (const LongNumber& other) const
 {
-    LongNumber result;
+    if(other._size == 1 && other._digits[0] == '0') 
+        throw std::invalid_argument("division by 0 is not possible!\n");
+
+    if(_size == 1 && _digits[0] == '0') 
+        return LongNumber("0");
+
+    if(compareAbsolute(other) == -1) return LongNumber("0");
+
+    if(compareAbsolute(other) == 0)
+    {
+        bool isNegative = _isNegative ^ other._isNegative;
+        if(isNegative) return LongNumber("-1");
+        else return LongNumber("1");
+    }
+
+    LongNumber result(_size);
+    result._isNegative = _isNegative ^ other._isNegative;
+
+    LongNumber divisible("0"); // делимое
+    LongNumber remainder("0");   // остаток
+    size_t i = 0;
+
+    while(divisible < other)
+    {
+        divisible = divisible * 10 + (_digits[i] - '0');
+        i++;
+    }
+
     
     return result;
 }
