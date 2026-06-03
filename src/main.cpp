@@ -2,6 +2,8 @@
 #include "../include/Matrix.h"
 #include "../include/Generator.h"
 #include "../include/tests.h"
+#include "../include/Graph.h"
+#include "../include/BinarySearchTree.h"
 
 using namespace std;
 using namespace Generator;
@@ -13,10 +15,10 @@ int main()
     
     cout << "Starting LongNumber tests..." << endl << endl;
     
-    LongNumber a("123");
-    LongNumber b("45");
+    LongNumber a("100");
+    LongNumber b("33");
 
-    LongNumber result = a / b;
+    LongNumber result = a % b;
     result.print();
 
     try {

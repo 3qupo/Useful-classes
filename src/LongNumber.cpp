@@ -294,7 +294,6 @@ LongNumber LongNumber::operator * (const LongNumber &other) const
     return result;
 }
 
-// TODO: Second (Сначала перегрузить оператор сложения LongNumber с int)
 LongNumber LongNumber::operator / (const LongNumber& other) const
 {
     if(other._size == 1 && other._digits[0] == '0') 
@@ -308,92 +307,88 @@ LongNumber LongNumber::operator / (const LongNumber& other) const
     if(compareAbsolute(other) == 0)
     {
         bool isNegative = _isNegative ^ other._isNegative;
-        if(isNegative) return LongNumber("-1");
-        else return LongNumber("1");
+        return isNegative ? LongNumber("-1") : LongNumber("1");
     }
 
-    LongNumber result(_size);
+    LongNumber dividend = *this;
+    LongNumber divisor = other;
+    LongNumber result;
+
+    dividend._isNegative = false;
+    divisor._isNegative = false;
     result._isNegative = _isNegative ^ other._isNegative;
 
-    LongNumber divisible("0"); // делимое
     LongNumber remainder("0");   // остаток
-    size_t i = 0;
 
-    while(divisible < other)
+    for(size_t i = 0; i < dividend.getSize(); i++)
     {
-        divisible = divisible * 10 + (_digits[i] - '0');
-        i++;
+        remainder = remainder * 10 + LongNumber(std::string(1, dividend._digits[i]).c_str());
+
+        int digit = 0;
+        LongNumber product;
+
+        for(int d = 9; d >= 0; d--)
+        {
+            LongNumber temp = divisor * LongNumber(std::to_string(d).c_str());
+            if(temp.compareAbsolute(remainder) != 1)
+            {
+                digit = d;
+                product = temp;
+                break;
+            }
+        }
+
+        result = result * 10 + LongNumber(std::to_string(digit).c_str());
+
+        remainder = remainder - product;
     }
 
+    result.RemovingLeadingZeros();
     
     return result;
 }
 
 LongNumber LongNumber::operator % (const LongNumber& other) const
 {
-    LongNumber result;
-
-    return result;
+    if(other.getSize() == 1 && other._digits[0] == '0') 
+        throw std::invalid_argument("module by zero\n");
+    if(*this == 0) return LongNumber("0");
+    return *this - (other * (*this / other));
 }
 
-// TODO: you need to check it
+// TODO: you need to change      it
 LongNumber LongNumber::operator + (const int& other) const
 {
-    if(other == 0) return *this;
-    if(_size == 0) return LongNumber(other);
+    LongNumber temp = LongNumber(std::to_string(other).c_str());
 
-    size_t shift = 0;
-    size_t sum = 0;
-    int copy_other = other;
-    size_t result_size = max(static_cast<int>(getSize()), length(other)) + 1;
-    LongNumber result(result_size);
-    size_t j = getSize() - 1;
-    size_t k = length(other) - 1;
-    size_t index_this = getSize() - 1;
-
-    for(size_t i = result_size - 1; i > 0; i--)
-    {
-        sum = shift;
-
-        if(index_this < getSize())
-        {
-            sum += _digits[index_this] - '0';
-            if(index_this > 0) index_this--;
-        }
-        sum += _digits[i] - '0';
-        copy_other > 0 ? (sum += copy_other % 10) : sum += 0;
-
-        result._digits[i] = (sum % 10) + '0';
-        shift = sum / 10;
-
-        j--; 
-        if(copy_other > 0) copy_other /= 10;
-    }
-
-    if(shift) result._digits[0] = shift + '0';
-    else result.RemovingLeadingZeros();
-
-    return result;
+    return *this + temp;
 }
 
 LongNumber LongNumber::operator - (const int& other) const
 {
-    return *this;
+    LongNumber temp = LongNumber(std::to_string(other).c_str());
+
+    return *this - temp;
 }
 
 LongNumber LongNumber::operator * (const int& other) const
 {
-    return *this;
+    LongNumber temp(std::to_string(other).c_str());
+    return *this * temp;
 }
 
 LongNumber LongNumber::operator / (const int& other) const
 {
-    return *this;
+    if (other == 0) throw std::invalid_argument("division by zero");
+    LongNumber temp(std::to_string(other).c_str());
+    return *this / temp;
 }
 
 LongNumber LongNumber::operator % (const int& other) const
 {
-    return *this;
+    if (other == 0) throw std::invalid_argument("modulo by zero");
+    LongNumber temp(std::to_string(other).c_str());
+    return *this % temp;
 }
 
 bool LongNumber::operator == (const LongNumber &other) const 
