@@ -67,7 +67,7 @@ Matrix Matrix::operator + (const Matrix& other) const
     for(size_t i = 0; i < _rows; i++)
     {
         for(size_t j = 0; j < _columns; j++) {
-            result.setValue(i, j, getValue(i, j) + other.getValue(i, j));   // инкапсуляция
+            result.setValue(i, j, getValue(i, j) + other.getValue(i, j));
         }
     }
     return result;
@@ -88,7 +88,6 @@ Matrix Matrix::operator - (const Matrix& other) const
     return result;
 }
 
-// TODO: i don't understand how i need to make it
 Matrix Matrix::operator * (const Matrix& other) const
 {
     if(_columns != other._rows) throw invalid_argument("The row length must be equal to the column length\n");
@@ -121,7 +120,7 @@ Matrix Matrix::operator * (int other) const
     return result;
 }
 
-Matrix Matrix::transposition()
+Matrix Matrix::transposition() const
 {
     return *this;
 }

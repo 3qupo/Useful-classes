@@ -17,28 +17,22 @@ int main()
 
     try {
         
-        testAssignmentOperatorLongNumber();
+        testCreateMatrix();
         cout << endl;
         
-        testIndexOperatorLongNumber();
+        testAssignmentOperatorMatrix();
         cout << endl;
         
         testArithmeticOperatorsWithLongNumber();
         cout << endl;
         
-        testArithmeticOperatorsLongNumberWithInt();
+        testArithmeticOperatorsWithMatrix();
         cout << endl;
         
-        testComparisonOperatorsWithLongNumber();
+        testArithmeticOperatorsMatrixWithInt();
         cout << endl;
         
-        testComparisonOperatorsLongNumberWithInt();
-        cout << endl;
-        
-        testEdgeCasesLongNumber();
-        cout << endl;
-        
-        testMixedOperationsLongNumber();
+        testEdgeCasesMatrix();
         cout << endl;
         
         cout << "====================================" << endl;
