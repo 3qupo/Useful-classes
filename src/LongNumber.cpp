@@ -3,9 +3,6 @@
 #include <cmath>
 #include <cstring>
 #include <iostream>
-#include <stdexcept>
-
-using namespace std;
 
 // конструктор по умолчанию
 LongNumber::LongNumber() 
@@ -63,7 +60,7 @@ LongNumber::LongNumber(const char *array)
 
     _digits[_size] = '\0';
 
-    this->RemovingLeadingZeros();
+    this->removeLeadingZeros();
 }
 
 // конструктор копирования
@@ -111,7 +108,7 @@ LongNumber &LongNumber::operator = (const LongNumber &other)
 
 char& LongNumber::operator [] (const size_t index) 
 {   
-    if (index >= _size) throw out_of_range("Index out of range\n");
+    if (index >= _size) throw std::out_of_range("Index out of range\n");
     return _digits[index];
 }
 
@@ -132,7 +129,7 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         // -5 + +3
         if(cmp == 1)
         {
-            LongNumber result = substractAbsolute(other);
+            LongNumber result = subtractAbsolute(other);
             result._isNegative = true;
             return result;
         }
@@ -140,7 +137,7 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         // -3 + +5
         if(cmp == -1) 
         {
-            LongNumber result = other.substractAbsolute(*this);
+            LongNumber result = other.subtractAbsolute(*this);
             return result;
         }
     }
@@ -152,7 +149,7 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         // 5 + -3
         if(cmp == 1) 
         {
-            LongNumber result = substractAbsolute(other);
+            LongNumber result = subtractAbsolute(other);
             return result;
         }
         
@@ -160,7 +157,7 @@ LongNumber LongNumber::operator + (const LongNumber &other) const
         // 3 + -5
         if(cmp == -1)
         {
-            LongNumber result = other.substractAbsolute(*this);
+            LongNumber result = other.subtractAbsolute(*this);
             result._isNegative = true;
             return result;
         }
@@ -173,7 +170,7 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
 {
     size_t shift = 0;
     size_t sum = 0;
-    size_t result_size = max(_size, other._size) + 1;
+    size_t result_size = std::max(_size, other._size) + 1;
     int j = _size - 1; 
     int k = other._size - 1;
     LongNumber result(result_size);
@@ -191,7 +188,7 @@ LongNumber LongNumber::addAbsolute(const LongNumber& other) const
         j--; k--;
     }
 
-    result.RemovingLeadingZeros();
+    result.removeLeadingZeros();
     return result;
 }
 
@@ -202,10 +199,10 @@ LongNumber LongNumber::operator - (const LongNumber &other) const
     if (!_isNegative && !other._isNegative)
     {
         int cmp = compareAbsolute(other);
-        if(cmp >= 0) return substractAbsolute(other);
+        if(cmp >= 0) return subtractAbsolute(other);
         else  
         {
-            LongNumber result = other.substractAbsolute(*this);
+            LongNumber result = other.subtractAbsolute(*this);
             result._isNegative = true;
             return result;
         }
@@ -234,7 +231,7 @@ LongNumber LongNumber::operator - (const LongNumber &other) const
     return LongNumber("0");
 }
 
-LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
+LongNumber LongNumber::subtractAbsolute(const LongNumber& other) const
 {
     int borrow = 0;
     int sub = 0;
@@ -258,7 +255,7 @@ LongNumber LongNumber::substractAbsolute(const LongNumber& other) const
         i--; j--;
     }
 
-    return result.RemovingLeadingZeros();
+    return result.removeLeadingZeros();
 }
 
 
@@ -289,7 +286,7 @@ LongNumber LongNumber::operator * (const LongNumber &other) const
         result._digits[i] = ((result._digits[i] - '0') + carry) + '0';
     }
 
-    result = result.RemovingLeadingZeros();
+    result = result.removeLeadingZeros();
 
     return result;
 }
@@ -320,7 +317,7 @@ LongNumber LongNumber::operator / (const LongNumber& other) const
 
     LongNumber remainder("0");   // остаток
 
-    for(size_t i = 0; i < dividend.getSize(); i++)
+    for(size_t i = 0; i < dividend.size(); i++)
     {
         remainder = remainder * 10 + LongNumber(std::string(1, dividend._digits[i]).c_str());
 
@@ -343,14 +340,14 @@ LongNumber LongNumber::operator / (const LongNumber& other) const
         remainder = remainder - product;
     }
 
-    result.RemovingLeadingZeros();
+    result.removeLeadingZeros();
     
     return result;
 }
 
 LongNumber LongNumber::operator % (const LongNumber& other) const
 {
-    if(other.getSize() == 1 && other._digits[0] == '0') 
+    if(other.size() == 1 && other._digits[0] == '0') 
         throw std::invalid_argument("module by zero\n");
     if(*this == 0) return LongNumber("0");
     return *this - (other * (*this / other));
@@ -426,7 +423,7 @@ bool LongNumber::operator > (const LongNumber &other) const
     if (_size != other._size)
         return _isNegative ? _size < other._size : _size > other._size;
     
-    for (size_t i = 0; i < getSize(); i++)
+    for (size_t i = 0; i < size(); i++)
     {
         if (_digits[i] != other._digits[i])
         {
@@ -446,7 +443,7 @@ bool LongNumber::operator >= (const LongNumber &other) const
     if (_size != other._size)
         return _isNegative ? _size < other._size : _size > other._size;
 
-    for (int i = 0; i < getSize(); i++) 
+    for (int i = 0; i < size(); i++) 
     {
         if(_digits[i] != other._digits[i])
         {
@@ -464,7 +461,7 @@ bool LongNumber::operator < (const LongNumber &other) const
     if (_size != other._size) 
         return _isNegative ? _size > other._size : _size < other._size;
 
-    for (int i = 0; i < getSize(); i++) 
+    for (int i = 0; i < size(); i++) 
     {
         if(_digits[i] != other._digits[i])
         {
@@ -767,7 +764,7 @@ int LongNumber::length(int number) const
     return len;
 }
 
-size_t LongNumber::getSize() const {
+size_t LongNumber::size() const {
     return _size;
 }
 
@@ -775,17 +772,17 @@ bool LongNumber::getIsNegative() const {
     return _isNegative;
 }
 
-void LongNumber::print() 
+void LongNumber::print() const
 {
     if (_size == 0 || _digits == nullptr) return;
-    if(_isNegative) cout << "-";
+    if(_isNegative) std::cout << "-";
     for (int i = 0; i < _size; i++) {
-        cout << _digits[i];
+        std::cout << _digits[i];
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
-LongNumber &LongNumber::RemovingLeadingZeros() 
+LongNumber &LongNumber::removeLeadingZeros() 
 {
     if(_size == 0 || _digits == nullptr) return *this;
 
