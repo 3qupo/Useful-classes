@@ -398,8 +398,7 @@ bool LongNumber::operator == (const LongNumber &other) const
 
     for (int i = 0; i < _size; i++) 
     {
-        if (_digits[i] != other._digits[i])
-        return false;
+        if (_digits[i] != other._digits[i]) return false;
     }
 
     return true;
@@ -421,27 +420,39 @@ bool LongNumber::operator != (const LongNumber &other) const
 
 bool LongNumber::operator > (const LongNumber &other) const 
 {
-    if (_isNegative != other._isNegative) return _isNegative > other._isNegative;
-    if (_size != other._size) return _size > other._size;
-
-    for (int i = 0; i < _size; i++) 
+    if (_isNegative != other._isNegative) 
+        return !_isNegative;  // положительное > отрицательного
+    
+    if (_size != other._size)
+        return _isNegative ? _size < other._size : _size > other._size;
+    
+    for (size_t i = 0; i < getSize(); i++)
     {
-        if (_digits[i] < other._digits[i]) return false;
-        if (_digits[i] > other._digits[i]) return true;
+        if (_digits[i] != other._digits[i])
+        {
+            if (_isNegative)
+                return _digits[i] < other._digits[i];
+            else
+                return _digits[i] > other._digits[i];
+        }
     }
-
+    
     return false;
 }
 
 bool LongNumber::operator >= (const LongNumber &other) const 
 {
-    if (_isNegative != other._isNegative) return _isNegative > other._isNegative;
-    if (_size != other._size) return _size > other._size;
+    if (_isNegative != other._isNegative) return !_isNegative;
+    if (_size != other._size)
+        return _isNegative ? _size < other._size : _size > other._size;
 
-    for (int i = 0; i < _size; i++) 
+    for (int i = 0; i < getSize(); i++) 
     {
-        if (_digits[i] < other._digits[i]) return false;
-        if (_digits[i] > other._digits[i]) return true;
+        if(_digits[i] != other._digits[i])
+        {
+            if(_isNegative) return _digits[i] <= other._digits[i];
+            else return _digits[i] >= other._digits[i];
+        }
     }
 
     return true;
@@ -450,26 +461,32 @@ bool LongNumber::operator >= (const LongNumber &other) const
 bool LongNumber::operator < (const LongNumber &other) const 
 {
     if (_isNegative != other._isNegative) return _isNegative;
-    if (_size != other._size) return _size < other._size;
+    if (_size != other._size) 
+        return _isNegative ? _size > other._size : _size < other._size;
 
-    for (int i = 0; i < _size; i++) 
+    for (int i = 0; i < getSize(); i++) 
     {
-        if (_digits[i] > other._digits[i]) return false;
-        if (_digits[i] < other._digits[i]) return true;
-    }
+        if(_digits[i] != other._digits[i])
+        {
+            if(_isNegative) return _digits[i] > other._digits[i];
+            else return _digits[i] < other._digits[i];
+        }
+    } 
 
     return false;
 }
 
 bool LongNumber::operator <= (const LongNumber &other) const 
 {
-    if (_isNegative != other._isNegative) return _isNegative < other._isNegative;
-    if (_size != other._size) return _size < other._size;
+    if (_isNegative != other._isNegative) return _isNegative;
+    if (_size != other._size) 
+        return _isNegative ? _size < other._size : _size > other._size;
 
     for (int i = 0; i < _size; i++) 
     {
-        if (_digits[i] > other._digits[i]) return false;
-        if (_digits[i] < other._digits[i]) return true;
+        if(_digits[i] != other._digits[i]) 
+        if(_isNegative) return _digits[i] > other._digits[i];
+        else return _digits[i] < other._digits[i];
     }
 
     return true;
@@ -481,7 +498,7 @@ bool LongNumber::operator == (const int &other) const
     if (!_isNegative && other < 0) return false;
     if (_size != length(other)) return false;
 
-    int copy = other;
+    int copy = abs(other);
 
     for (int i = _size; i > 0; i--) 
     {
@@ -514,18 +531,46 @@ bool LongNumber::operator != (const int &other) const
 
 bool LongNumber::operator < (const int &other) const 
 {
-    if (_isNegative && other > 0) return false;
+    if (_isNegative && other > 0) return true;
     if (!_isNegative && other < 0) return false;
+    if (_isNegative && other < 0)
+    {
+        int other_len = length(other);
+        if (_size > other_len) return false; 
+        if (_size < other_len) return true;   
+
+        LongNumber copy_long_number = *this;
+        int copy_int = abs(other);
+        copy_long_number._isNegative = false;
+        int divisor = 1;
+
+        // TODO: вынести в отдельную функцию
+        for (int i = 1; i < length(other); i++) {
+            divisor *= 10;
+        }
+
+        for(int i = 0; i < _size; i++)
+        {
+            int digit_int = (copy_int / divisor) % 10;
+            if (_digits[i] - '0' > digit_int) return false;
+            else if (_digits[i] - '0' < digit_int) return true;
+            divisor /= 10;
+        }
+
+        return false;
+    }
+
     int lenght_int = length(other);
-    if (_size < lenght_int) return true;
-    if (_size > lenght_int) return false;
+    
+    if (_size < lenght_int) return false;
+    if (_size > lenght_int) return true;
 
     int divisor = 1;
     int digit_int = 0;
-    int copy = other;
+    int copy = abs(other);
 
     // TODO: вынести в отдельную функцию
-    for (int i = copy / 10; i != 0; i /= 10) {
+    for (int i = 1; i < length(other); i++) {
         divisor *= 10;
     }
 
@@ -544,17 +589,44 @@ bool LongNumber::operator < (const int &other) const
 bool LongNumber::operator <= (const int &other) const 
 {
     if (_isNegative && other > 0) return true;
-    if (!_isNegative && other < 0) return true;
+    if (!_isNegative && other < 0) return false;
+    if (_isNegative && other < 0)
+    {
+        int other_len = length(other);
+        if (_size > other_len) return true; 
+        if (_size < other_len) return false;   
+
+        LongNumber copy_long_number = *this;
+        int copy_int = abs(other);
+        copy_long_number._isNegative = false;
+        int divisor = 1;
+
+        // TODO: вынести в отдельную функцию
+        for (int i = 1; i < length(other); i++) {
+            divisor *= 10;
+        }
+
+        for(int i = 0; i < _size; i++)
+        {
+            int digit_int = (copy_int / divisor) % 10;
+            if (_digits[i] - '0' > digit_int) return false;
+            else if (_digits[i] - '0' < digit_int) return true;
+            divisor /= 10;
+        }
+
+        return true;
+    }
+
     int lenght_int = length(other);
-    if (_size < lenght_int) return true;
-    else if (_size > lenght_int) return false;
+    if (_size < lenght_int) return false;
+    else if (_size > lenght_int) return true;
 
     int divisor = 1;
     int digit_int = 0;
-    int copy = other;
+    int copy = abs(other);
 
     // TODO: вынести в отдельную функцию
-    for (int i = copy / 10; i != 0; i /= 10) {
+    for (int i = 1; i < length(other); i++) {
         divisor *= 10;
     }
 
@@ -573,7 +645,34 @@ bool LongNumber::operator <= (const int &other) const
 bool LongNumber::operator > (const int &other) const 
 {
     if (_isNegative && other > 0) return false;
-    if (!_isNegative && other < 0) return false;
+    if (!_isNegative && other < 0) return true;
+    if (_isNegative && other < 0)
+    {
+        int other_len = length(other);
+        if (_size > other_len) return false; 
+        if (_size < other_len) return true;   
+
+        LongNumber copy_long_number = *this;
+        int copy_int = abs(other);
+        copy_long_number._isNegative = false;
+        int divisor = 1;
+
+        // TODO: вынести в отдельную функцию
+        for (int i = 1; i < length(other); i++) {
+            divisor *= 10;
+        }
+
+        for(int i = 0; i < _size; i++)
+        {
+            int digit_int = (copy_int / divisor) % 10;
+            if (_digits[i] - '0' > digit_int) return false;
+            else if (_digits[i] - '0' < digit_int) return true;
+            divisor /= 10;
+        }
+
+        return false;
+    }
+
     int lenght_int = length(other);
 
     if (_size > lenght_int) return true;
@@ -581,9 +680,10 @@ bool LongNumber::operator > (const int &other) const
 
     int divisor = 1;
     int digit_int = 0;
-    int copy = other;
+    int copy = abs(other);
 
-    for (int i = copy / 10; i != 0; i /= 10) {
+    // TODO: вынести в отдельную функцию
+    for (int i = 1; i < length(other); i++) {
         divisor *= 10;
     }
 
@@ -601,7 +701,33 @@ bool LongNumber::operator > (const int &other) const
 bool LongNumber::operator >= (const int &other) const 
 {
     if (_isNegative && other > 0) return false;
-    if (!_isNegative && other < 0) return false;
+    if (!_isNegative && other < 0) return true;
+    if (_isNegative && other < 0)
+    {
+        int other_len = length(other);
+        if (_size > other_len) return false; 
+        if (_size < other_len) return true;   
+
+        LongNumber copy_long_number = *this;
+        int copy_int = abs(other);
+        copy_long_number._isNegative = false;
+        int divisor = 1;
+
+        for (int i = 1; i < length(other); i++) {
+            divisor *= 10;
+        }
+
+        for(int i = 0; i < _size; i++)
+        {
+            int digit_int = (copy_int / divisor) % 10;
+            if (_digits[i] - '0' > digit_int) return false;
+            else if (_digits[i] - '0' < digit_int) return true;
+            divisor /= 10;
+        }
+
+        return true;
+    }
+
     int lenght_int = length(other);
 
     if (_size > lenght_int) return true;
@@ -609,9 +735,9 @@ bool LongNumber::operator >= (const int &other) const
 
     int divisor = 1;
     int digit_int = 0;
-    int copy = other;
+    int copy = abs(other);
 
-    for (int i = copy / 10; i != 0; i /= 10) {
+    for (int i = 1; i < length(other); i++) {
         divisor *= 10;
     }
 
@@ -634,7 +760,7 @@ int LongNumber::length(int number) const
     int temp = abs(number);
     while (temp != 0) 
     {
-        number /= 10;
+        temp /= 10;
         len++;
     }
 

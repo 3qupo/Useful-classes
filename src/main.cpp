@@ -14,12 +14,6 @@ int main()
 {
     
     cout << "Starting LongNumber tests..." << endl << endl;
-    
-    LongNumber a("100");
-    LongNumber b("33");
-
-    LongNumber result = a % b;
-    result.print();
 
     try {
         
