@@ -3,8 +3,6 @@
 #include <iostream>
 #include <cstring>
 
-using namespace std;
-
 class LongNumber
 {
 private:
@@ -47,12 +45,12 @@ public:
     bool operator < (const int& other) const;
     bool operator <= (const int& other) const;
 
-    size_t getSize() const;
+    size_t size() const;
     bool getIsNegative() const;
     LongNumber addAbsolute(const LongNumber& other) const;
-    LongNumber substractAbsolute(const LongNumber& other) const;
+    LongNumber subtractAbsolute(const LongNumber& other) const;
     int compareAbsolute(const LongNumber& other) const;
-    LongNumber& RemovingLeadingZeros();
+    LongNumber& removeLeadingZeros();
     int length(int number) const;
-    void print(); 
+    void print() const; 
 };
