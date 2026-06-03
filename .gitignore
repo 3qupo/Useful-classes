@@ -3,6 +3,9 @@
 /src/main
 
 ../.PVS-Studio/
+.PVS-Studio/
+build/
+
 ../.vscode/
 /venv/
 .vscode/settings.json
