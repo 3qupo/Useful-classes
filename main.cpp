@@ -1,9 +1,12 @@
-#include "include/LongNumber.h"
-#include "include/Matrix.h"
-#include "include/Generator.h"
-#include "include/tests.h"
-#include "include/Graph.h"
-#include "include/BinarySearchTree.h"
+#include "include/structs/LongNumber.hpp"
+#include "include/structs/Matrix.hpp"
+#include "include/structs/Generator.hpp"
+#include "include/tests.hpp"
+#include "include/structs/Graph.hpp"
+#include "include/structs/BinarySearchTree.hpp"
+#include "src/networks/database/Database.hpp"
+#include "src/networks/database/ChatDatabase.hpp"
+#include "src/networks/database/EchoDatabase.hpp"
 
 using namespace std;
 using namespace Generator;
@@ -15,8 +18,9 @@ void fermat_factorization(LongNumber& number);
 
 int main() 
 {
-    LongNumber number("100000007");
-    fermat_factorization(number);
+    Database db;
+    db.connect("localhost", "5432", "my_own_db", "Andrei", "1234");
+    db.disconnect();
     
     return 0;
 }
