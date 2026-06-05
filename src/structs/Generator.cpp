@@ -1,4 +1,6 @@
-#include "../include/Generator.h"
+#include "../../include/structs/Generator.hpp"
+#include "../../include/structs/Matrix.hpp"
+#include "../../include/structs/LongNumber.hpp"
 
 #include <iostream>
 #include <ctime>

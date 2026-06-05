@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../include/LongNumber.h"
-#include "../include/Matrix.h"
+#include "structs/LongNumber.hpp"
+#include "structs/Matrix.hpp"
 
 namespace testsLongNumber
 {

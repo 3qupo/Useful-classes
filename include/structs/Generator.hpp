@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../include/LongNumber.h"
-#include "../include/Matrix.h"
-#include "../include/Graph.h"
-#include "../include/BinarySearchTree.h"
+#include "LongNumber.hpp"
+#include "Matrix.hpp"
+#include "Graph.hpp"
+#include "BinarySearchTree.hpp"
 
 namespace Generator
 {

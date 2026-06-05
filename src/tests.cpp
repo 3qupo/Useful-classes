@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cassert>
 
-#include "../include/LongNumber.h"  
-#include "../include/Matrix.h"
-#include "../include/tests.h"
+#include "../include/structs/LongNumber.hpp"  
+#include "../include/structs/Matrix.hpp"
+#include "../include/tests.hpp"
 
 // \u274C ❌
 // \u2705 ✅

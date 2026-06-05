@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/LongNumber.h"
+#include "../../include/structs/LongNumber.hpp"
 
 LongNumber my_sqrt(LongNumber number)
 {

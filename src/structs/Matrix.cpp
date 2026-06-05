@@ -1,4 +1,4 @@
-#include "../include/Matrix.h"
+#include "../../include/structs/Matrix.hpp"
 #include <iostream>
 #include <cstddef>
 
