@@ -1,3 +1,4 @@
+#pragma once
 
 #include <postgresql/libpq-fe.h>  
 #include <string>
