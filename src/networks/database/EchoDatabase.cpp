@@ -15,7 +15,7 @@ bool EchoDatabase::logMessage(const std::string& client_id, const std::string& m
     std::string excape_client_id = escapeString(client_id);
     std::string excape_message = escapeString(message);
 
-    std::string sql_command = "INSERT INTO echo_logs (client_ip , message) VALUES (" + excape_client_id + ", " + excape_message + ")";
+    std::string sql_command = "INSERT INTO logs (client_ip , message) VALUES (" + excape_client_id + ", " + excape_message + ")";
     bool result = executeQuery(sql_command);
     if (result == true) return true;
     else return false;
@@ -23,7 +23,7 @@ bool EchoDatabase::logMessage(const std::string& client_id, const std::string& m
 
 std::vector<std::string> EchoDatabase::getRecentMessage(const int limit)
 {
-    std::string sql_command = "SELECT message FROM echo_logs ORDER BY created_at DESC LIMIT " + std::to_string(limit);
+    std::string sql_command = "SELECT message FROM logs ORDER BY created_at DESC LIMIT " + std::to_string(limit);
     PGresult* result = executeQueryWithResult(sql_command);
 
     if (result == nullptr) return {};

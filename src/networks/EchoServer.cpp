@@ -6,9 +6,10 @@
 #include <iostream>
 #include <errno.h>
 #include <csignal>
-#include "../include/networks/EchoServer.hpp"
+#include "../../include/networks/EchoServer.hpp"
+#include "database/EchoDatabase.hpp"
 
-// -----------Server------------
+EchoServer* EchoServer::_instance = nullptr;
 
 EchoServer::EchoServer(int port)
 {
@@ -43,6 +44,13 @@ EchoServer::EchoServer(int port)
     _running = true;
     _instance = this;
     std::signal(SIGINT, signalHandler);
+
+    bool database_connect = _db.connect("localhost", "5433", "echo_db", "postgres", "1234");
+    if (database_connect == false)
+    {
+        std::cerr << "Database connection failed: " << _db.getLastError() << std::endl;
+        exit(1);
+    }
 }
 
 void EchoServer::signalHandler(int sig)
@@ -54,11 +62,15 @@ void EchoServer::signalHandler(int sig)
     }
 }
 
-EchoServer::~EchoServer() { closeServer(); }
+EchoServer::~EchoServer() 
+{ 
+    _db.disconnect();
+    closeServer(); 
+}
 
 void EchoServer::start()
 {
-    std::cout << "Server is connected in the port " + _port << std::endl;
+    std::cout << "Server is connected in the port " << _port << std::endl;
 
     while(_running)
     {
@@ -89,7 +101,7 @@ int EchoServer::acceptClient()
 
 void EchoServer::echoResponse(int client_fd)
 {
-    char buffer[4096] = { 0 }; 
+    char buffer[4096] = { 0 };
 
     ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) / sizeof(buffer[0]), 0);
     if (bytes_read == -1)
@@ -114,6 +126,10 @@ void EchoServer::echoResponse(int client_fd)
         if (close_result == -1) perror("Close problem: ");
         return;
     }
+
+
+    bool log_success = _db.logMessage(inet_ntoa(_address.sin_addr), std::string(buffer, bytes_read));
+    if (log_success == false) std::cerr << "Failed to log a message: " << _db.getLastError() << std::endl;
 }
 
 
@@ -125,36 +141,4 @@ void EchoServer::closeServer()
         if (result_close == -1) perror("Close failed");
     }
     _socket_fd = -1;
-}
-
-
-// -----------Client------------
-
-EchoClient::EchoClient(const std::string& ip, int port)
-{
-
-}
-
-
-bool EchoClient::connectServer()
-{
-
-}
-
-
-void EchoClient::sendMessage(const std::string& message)
-{
-
-}
-
-
-std::string EchoClient::receiveMessage()
-{
-
-}
-
-
-void EchoClient::closeClient()
-{
-
 }
