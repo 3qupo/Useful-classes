@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS clients (
+	client_id SERIAL PRIMARY KEY,
+	ip_address VARCHAR(45) NOT NULL UNIQUE,
+	first_seen TIMESTAMP DEFAULT NOW(),
+	last_seen TIMESTAMP DEFAULT NOW(),
+	request_count INT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS logs (
+	logs_id SERIAL PRIMARY KEY,
+	client_id INT NOT NULL REFERENCES clients(client_id) ON DELETE CASCADE,
+	message TEXT NOT NULL,
+	created_at TIMESTAMP DEFAULT NOW()
+);

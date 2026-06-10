@@ -10,11 +10,16 @@ class EchoServer
 {
 private:
     int _socket_fd;
-    sockaddr_in _address;
+    struct sockaddr_in _address;
     int _port;
+    bool _running;
+
+    static EchoServer* _instance;
+    static void signalHandler(int sig);
 
 public:
     EchoServer(int port);
+    ~EchoServer();
     void start();
     int acceptClient();
     void echoResponse(int client_fd);
