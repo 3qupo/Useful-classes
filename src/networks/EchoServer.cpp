@@ -103,33 +103,42 @@ void EchoServer::echoResponse(int client_fd)
 {
     char buffer[4096] = { 0 };
 
-    ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) / sizeof(buffer[0]), 0);
-    if (bytes_read == -1)
+    while (_running)
     {
-        perror("echo read failed");
-        int close_result = close(client_fd);
-        if (close_result == -1) perror("Close problem: ");
-        return;
+        ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) / sizeof(buffer[0]), 0);
+        if (bytes_read == -1)
+        {
+            perror("echo read failed");
+            int close_result = close(client_fd);
+            if (close_result == -1) perror("Close problem: ");
+            return;
+        }
+
+        if (bytes_read == 0)            // A client closed the connect 
+        {
+            close(client_fd);
+            return;
+        }
+
+        ssize_t send_result = send(client_fd, buffer, bytes_read, 0);
+        if (send_result == -1)
+        {
+            perror("echo send failed");
+            int close_result = close(client_fd);
+            if (close_result == -1) perror("Close problem: ");
+            return;
+        }
+
+        std::string client_ip = inet_ntoa(_address.sin_addr);
+        std::string message(buffer, bytes_read);
+
+        bool log_success = _db.logMessage(inet_ntoa(_address.sin_addr), std::string(buffer, bytes_read));
+        if (log_success == false) std::cerr << "Failed to log a message: " << _db.getLastError() << std::endl;
+
+        memset(buffer, 0, bytes_read);
     }
-
-    if (bytes_read == 0)            // A client closed the connect 
-    {
-        close(client_fd);
-        return;
-    }
-
-    ssize_t send_result = send(client_fd, buffer, bytes_read, 0);
-    if (send_result == -1)
-    {
-        perror("echo send failed");
-        int close_result = close(client_fd);
-        if (close_result == -1) perror("Close problem: ");
-        return;
-    }
-
-
-    bool log_success = _db.logMessage(inet_ntoa(_address.sin_addr), std::string(buffer, bytes_read));
-    if (log_success == false) std::cerr << "Failed to log a message: " << _db.getLastError() << std::endl;
+    
+    close(client_fd);
 }
 
 

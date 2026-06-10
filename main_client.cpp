@@ -15,13 +15,18 @@ int main() {
     std::cout << "Connected to server!" << std::endl;
     
     // Отправляем сообщение
-    std::string message = "What's up, bro";
-    std::cout << "Sending: " << message << std::endl;
-    client.sendMessage(message);
-    
-    // Получаем ответ
-    std::string reply = client.receiveMessage();
-    std::cout << "Received: " << reply << std::endl;
+    std::string input;
+    while (true)
+    {
+        std::cout << "You: ";
+        std::getline(std::cin, input);
+
+        if (input == "exit" || input == "q" || input == "z" || input == "quit") break;
+
+        client.sendMessage(input);
+        std::string reply = client.receiveMessage();
+        std::cout << "Server: " << reply << std::endl;
+    }
     
     client.closeClient();
     return 0;
