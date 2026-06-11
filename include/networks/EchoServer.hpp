@@ -8,6 +8,7 @@
 #include <iostream>
 #include <errno.h>
 #include "../../src/networks/database/EchoDatabase.hpp"
+#include <mutex>
 
 class EchoServer
 {
@@ -17,6 +18,8 @@ private:
     int _port;
     bool _running;
     EchoDatabase _db;
+    std::mutex _cout_mutex;
+    std::mutex _db_mutex;
 
     static EchoServer* _instance;
     static void signalHandler(int sig);

@@ -8,6 +8,7 @@
 #include <csignal>
 #include "../../include/networks/EchoServer.hpp"
 #include "database/EchoDatabase.hpp"
+#include <thread>
 
 EchoServer* EchoServer::_instance = nullptr;
 
@@ -75,14 +76,8 @@ void EchoServer::start()
     while(_running)
     {
         int client_fd = acceptClient();
-        if (client_fd == - 1) 
-        {
-            perror("Problem with accept client: ");
-            continue;
-        }
-        echoResponse(client_fd);
-        int close_result = close(client_fd);
-        if (close_result == -1) perror("Close problem: ");
+        if (client_fd == - 1) continue;
+        std::thread( [this, client_fd]() { echoResponse(client_fd); } ).detach();
     }
 
     std::cout << "Server stopped" << std::endl;
@@ -91,6 +86,24 @@ void EchoServer::start()
 
 int EchoServer::acceptClient()
 {
+    fd_set read_fds;
+    FD_ZERO(&read_fds);
+    FD_SET(_socket_fd, &read_fds);
+    
+    struct timeval timeout;
+    timeout.tv_sec = 0;  
+    timeout.tv_usec = 100000;
+    
+    int ready = select(_socket_fd + 1, &read_fds, NULL, NULL, &timeout);
+    
+    if (ready == -1)
+    {
+        if (_running) perror("select failed");
+        return -1;
+    }
+    
+    if (ready == 0) return -1;
+
     socklen_t address_len = sizeof(_address);
     int result_accept = accept(_socket_fd, (struct sockaddr*)& _address, &address_len);
     if (result_accept == -1 && _running) perror ("Accept failed");
@@ -120,6 +133,10 @@ void EchoServer::echoResponse(int client_fd)
             return;
         }
 
+        _cout_mutex.lock();
+        std::cout << "Received: " << std::string(buffer, bytes_read) << std::endl;
+        _cout_mutex.unlock();
+
         ssize_t send_result = send(client_fd, buffer, bytes_read, 0);
         if (send_result == -1)
         {
@@ -132,10 +149,10 @@ void EchoServer::echoResponse(int client_fd)
         std::string client_ip = inet_ntoa(_address.sin_addr);
         std::string message(buffer, bytes_read);
 
-        bool log_success = _db.logMessage(inet_ntoa(_address.sin_addr), std::string(buffer, bytes_read));
+        _db_mutex.lock();
+        bool log_success = _db.logMessage(client_ip, message);
+        _db_mutex.unlock();
         if (log_success == false) std::cerr << "Failed to log a message: " << _db.getLastError() << std::endl;
-
-        memset(buffer, 0, bytes_read);
     }
     
     close(client_fd);
