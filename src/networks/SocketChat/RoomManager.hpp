@@ -9,14 +9,13 @@
 class RoomManager
 {
 private:
-    std::map<std::string, Room> list_rooms;
+    std::map<std::string, Room> list_rooms_;
     
 public:
     RoomManager();
-    ~RoomManager();
 
     bool create_room(const std::string& name);
     void delete_room(const std::string& name);
-    Room* find_room(const std::string& name) const;
-    std::set<std::string> list_rooms() const;
+    const Room* find_room(const std::string& name) const;
+    std::set<std::string> all_rooms() const;
 };
