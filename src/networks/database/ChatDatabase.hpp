@@ -5,7 +5,7 @@
 #include <postgresql/libpq-fe.h>  
 #include <map>
 #include <set>
-
+#include "Database.hpp"
 
 class ChatDatabase : public Database
 {
