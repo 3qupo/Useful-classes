@@ -18,4 +18,5 @@ public:
     void delete_room(const std::string& name);
     const Room* find_room(const std::string& name) const;
     std::set<std::string> all_rooms() const;
+    std::set<int> getUsers(const std::string& room_name) const;
 };
