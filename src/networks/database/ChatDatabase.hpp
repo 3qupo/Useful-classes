@@ -21,9 +21,9 @@ public:
     bool deleteUser(const std::string& login);           // Удаление пользователя из БД
     bool createRoom(const std::string& room_name, const std::string& creator_id);    // Добавление комнаты из БД
     bool deleteRoom(const std::string& room_name);                                // Удаление комнаты из БД
-    std::string getUserHash(const std::string& login);
+    std::pair<std::string, std::string> getUserHash(const std::string& login);
     std::map<int, std::string> getRoomUsers(const std::string& room_name, const int limit) const;           // <client_fd, user_name>
     bool savePrivateMessage(const int from_user, const int to_user, const std::string& message);
-    bool getPrivateMessages(const int user1, const int user2, const int limit) const;
+    std::vector<std::string> getPrivateMessages(const int user1, const int user2, const int limit) const;
 };
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <postgresql/libpq-fe.h>
 #include "ChatDatabase.hpp"
 #include "Database.hpp"
 
@@ -75,8 +76,7 @@ bool ChatDatabase::deleteRoom(const std::string& room_name)
     return executeQuery(sql);
 }
 
-// Errors
-std::string ChatDatabase::getUserHash(const std::string& login)
+std::pair<std::string, std::string> ChatDatabase::getUserHash(const std::string& login)
 {
     if (isConnected() == false) return getLastError();
 
@@ -87,18 +87,33 @@ std::string ChatDatabase::getUserHash(const std::string& login)
 
     if (result_request == nullptr) return "";
 
-    std::string res = PQgetvalue(result_request, 0, 0);
+    std::string getHash = PQgetvalue(result_request, 0, 0);
+    std::string getSalt = PQgetvalue(result_request, 0, 1);
+
     PQclear(result_request);
     
-    return res;
+    return std::pair<std::string, std::string>(getHash, getSalt);
 }
 
-// Errrors
 std::map<int, std::string> ChatDatabase::getRoomUsers(const std::string& room_name, const int limit) const
 {
     if (isConnected() == false) return std::map<int, std::string>();      
 
-    return std::map<int, std::string>(limit, room_name);
+    std::string safe_room = escapeString(room_name);
+    std::string sql = "SELECT user_id, nickname FROM room_members WHERE room_name = '" + room_name + "' LIMIT " + std::to_string(limit);
+    
+    PGresult* result_request = executeQueryWithResult(sql);
+    std::map<int, std::string> result;
+    for (size_t i = 0; i < PQntuples(result_request); i++)
+    {
+        std::string getUserId = PQgetvalue(result_request, i, 0);
+        std::string getNickname = PQgetvalue(result_request, i, 1);
+        result[std::stoi(getUserId)] = getNickname;
+    }  
+
+    PQclear(result_request);
+
+    return result;
 }
 
 bool ChatDatabase::savePrivateMessage(const int from_user, const int to_user, const std::string& message)
@@ -114,9 +129,9 @@ bool ChatDatabase::savePrivateMessage(const int from_user, const int to_user, co
     return executeQuery(sql);
 }
 
-bool ChatDatabase::getPrivateMessages(const int user1, const int user2, const int limit) const
+std::vector<std::string> ChatDatabase::getPrivateMessages(const int user1, const int user2, const int limit) const
 {
-    if (isConnected() == false) return false;
+    if (isConnected() == false) return std::vector<std::string>();
 
     std::string sql = "SELECT * FROM messages WHERE (from_user = " + std::to_string(user1) 
                   + " AND to_user = " + std::to_string(user2) + ") OR (from_user = " 
@@ -125,8 +140,17 @@ bool ChatDatabase::getPrivateMessages(const int user1, const int user2, const in
 
     PGresult* result_request = executeQueryWithResult(sql);
 
-    if (result_request == nullptr) return false;
+    if (result_request == nullptr) return std::vector<std::string>();
+    std::vector<std::string> result;
+    int rows = PQntuples(result_request);
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        std::string message = PQgetvalue(result_request, i, 3);
+        result.push_back(message);
+    }
+
     PQclear(result_request);
 
-    return true;
+    return result;
 }
